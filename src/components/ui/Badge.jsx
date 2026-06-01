@@ -46,6 +46,11 @@ export default function Badge({
       bg-[rgba(245,158,11,0.12)] text-accent
       border border-[rgba(245,158,11,0.2)]
     `,
+    accent: `
+      bg-[rgba(245,158,11,0.12)] text-accent
+      border border-[rgba(245,158,11,0.2)]
+      font-semibold
+    `,
 
     // Freshness Badges (auto-applied by date helpers)
     new: `

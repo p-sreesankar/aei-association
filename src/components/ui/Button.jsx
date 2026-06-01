@@ -49,6 +49,12 @@ export default function Button({
       shadow-card hover:shadow-card-hover
       disabled:bg-surface2 disabled:text-text-muted disabled:border-border disabled:shadow-none
     `,
+    accent: `
+      bg-accent text-text-primary
+      hover:bg-accent-hover active:bg-accent-hover/90
+      shadow-card hover:shadow-card-hover
+      disabled:bg-surface3 disabled:text-text-muted disabled:shadow-none
+    `,
     ghost: `
       bg-transparent text-primary
       hover:bg-primary-soft active:bg-primary-soft

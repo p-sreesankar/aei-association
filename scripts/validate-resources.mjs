@@ -102,8 +102,8 @@ function validateResources(resources) {
     bySemesterModule.get(semester).push(moduleName);
   });
 
-  if ((bySemester.get('S2') || 0) !== 21) {
-    errors.push(`S2 count mismatch: expected 21, found ${bySemester.get('S2') || 0}.`);
+  if ((bySemester.get('S2') || 0) !== 27) {
+    errors.push(`S2 count mismatch: expected 27, found ${bySemester.get('S2') || 0}.`);
   }
 
   if ((bySemester.get('S4') || 0) !== 21) {

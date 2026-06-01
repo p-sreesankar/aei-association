@@ -26,7 +26,28 @@ Primary files:
 - `src/data/resources.js`
 - `src/data/projects.js`
 - `src/data/faculty.js`
-- `src/data/mock-tests.js` (present for sync/future use, currently not wired to routes)
+- `src/data/mock-tests.js` (mock test catalog and questions)
+
+### 5.7 Mock Tests (`src/data/mock-tests.js`)
+
+Expected fields per test:
+
+- `id`, `title`, `subject`, `scheme`, `semester`, `difficulty`, `startDate`, `durationMinutes`, `totalMarks`, `questions`
+- Optional: `endDate`
+
+Expected fields per question:
+
+- `id`, `type`, `question`, `options`, `correctAnswer`
+- Optional: `explanation`
+
+Important validator behavior (`scripts/validate-mock-tests.mjs`):
+
+1. Checks required fields, string IDs, and duplicate test IDs.
+2. Validates integer time limits and mark totals.
+3. Enforces a non-empty questions array.
+4. Validates each question's option list and correct answer index.
+
+If the mock test schema changes, update the validator and CI workflow in the same PR.
 
 Operational files:
 
@@ -50,6 +71,7 @@ Run before making edits:
 2. Run local checks:
 
 ```bash
+npm run validate:config
 npm run validate:resources
 npm run build
 ```
@@ -305,6 +327,9 @@ npm run build
 
 # preview production build
 npm run preview
+
+# config validation
+npm run validate:config
 
 # resource validations
 npm run validate:resources

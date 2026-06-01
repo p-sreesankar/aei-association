@@ -1,3 +1,4 @@
+
 # AEI Association — AEI, CET
 
 A modern, mobile-first static website for the Applied Electronics and Instrumentation (AEI) department at College of Engineering Trivandrum. Built with React, Vite, and Tailwind CSS. Zero backend — all content driven by simple JavaScript data files.
@@ -119,6 +120,30 @@ Edit `src/data/site-config.js` to change:
 - Theme colors
 - Grievance form URL
 
+### Mock Tests
+
+The mock test system is auth-gated and data-driven:
+
+- `src/data/mock-tests.js` defines the catalog, timing, and questions
+- `src/pages/Login.jsx` handles sign-in / sign-up
+- `src/pages/mock-tests/MockTestsList.jsx` lists tests
+- `src/pages/mock-tests/TestEnvironment.jsx` runs the timed quiz flow
+- `src/pages/mock-tests/TestResults.jsx` shows the score and answer breakdown
+- `src/pages/admin/Dashboard.jsx` and `src/pages/admin/ManageTests.jsx` cover the admin flow
+
+If you edit the schema, run `npm run validate:tests` before building.
+
+## Mock Tests Enhancements
+
+This project includes an integrated mock-tests experience with the following additions:
+
+- UI components: `Timer` and `ProgressBar` (exported from `src/components/ui`). They provide a consistent timer display and visual progress for tests.
+- Firestore-backed persistence: test submissions are stored in Firestore via `src/services/firestore-mock-tests.js` when a Firebase app is configured; otherwise submissions are saved to `localStorage` as a fallback.
+- The quiz (`src/pages/mocktest/MockTestQuiz.jsx`) supports pausing/resuming the timer; submissions auto-save on completion or when time expires.
+
+Notes:
+- Ensure Firebase client config is available in environment for production persistence. See `src/config/firebase.js` for initialization details.
+
 ---
 
 ## 🎨 Design System
@@ -209,6 +234,7 @@ https://YOUR-PROJECT.vercel.app
 | `npm run dev`    | Start development server (port 5173)           |
 | `npm run build`  | Build for production in `dist/`                |
 | `npm run preview`| Preview production build locally               |
+| `npm run validate:tests` | Validate mock tests dataset and schema rules |
 | `npm run validate:resources` | Validate `src/data/resources.js` dataset rules |
 | `npm run firebase:sync` | Sync content + images to Firebase (optional) |
 | `npm run firebase:sync:text` | Sync content only to Firebase (optional) |

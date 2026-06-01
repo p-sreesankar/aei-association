@@ -111,8 +111,10 @@ const SECTIONS = {
   notices:   true,   // Notices board page
   events:    true,   // Events page
   resources: true,   // Resources / downloads page
+  mockTests: true,   // Mock tests portal and quiz routes
   projects:  false,  // Projects showcase page (temporarily disabled)
   grievance: true,   // Anonymous grievance form page
+  admin:     true,   // Admin routes (protected)
   contact:   true,   // Contact page
 };
 

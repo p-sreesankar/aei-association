@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NAV_LINKS, BRAND } from '@/config/navigation';
+import { useAuth } from '@hooks/useAuth';
 
 const LOGO_SRC = '/images/logo/logo.png';
 
@@ -18,6 +19,7 @@ const LOGO_SRC = '/images/logo/logo.png';
  */
 export default function Navbar() {
   const location = useLocation();
+  const { user, isAdmin, loading, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -55,6 +57,8 @@ export default function Navbar() {
     }
     return location.pathname.startsWith(path);
   };
+
+  const authDestination = isAdmin ? '/admin' : '/mock-tests';
 
   return (
     <>
@@ -145,6 +149,35 @@ export default function Navbar() {
                 </Link>
               ))}
 
+              {!loading && (
+                <div className="ml-2 flex items-center gap-2">
+                  {!user ? (
+                    <Link
+                      to="/login"
+                      className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2 text-body-sm font-heading font-semibold text-text-primary transition-colors hover:border-primary hover:bg-primary-soft"
+                    >
+                      Login
+                    </Link>
+                  ) : (
+                    <>
+                      <Link
+                        to={authDestination}
+                        className="inline-flex items-center justify-center rounded-lg border border-primary/30 bg-primary-soft px-4 py-2 text-body-sm font-heading font-semibold text-text-primary transition-colors hover:bg-primary hover:text-bg"
+                      >
+                        {isAdmin ? 'Dashboard' : 'Mock Tests'}
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={logout}
+                        className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2 text-body-sm font-heading font-semibold text-text-secondary transition-colors hover:border-rose-400 hover:text-rose-300"
+                      >
+                        Logout
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
+
             </div>
 
             {/* ── Mobile Menu Button (min 44×44 touch target) ────────── */}
@@ -199,6 +232,40 @@ export default function Navbar() {
                   </motion.div>
                 ))}
               </nav>
+
+              {!loading && (
+                <div className="mt-8 rounded-2xl border border-border bg-surface p-4">
+                  {!user ? (
+                    <Link
+                      to="/login"
+                      className="inline-flex w-full items-center justify-center rounded-xl bg-primary px-4 py-3 text-body-sm font-heading font-semibold text-bg"
+                    >
+                      Login
+                    </Link>
+                  ) : (
+                    <div className="space-y-3">
+                      <p className="text-center text-body-sm text-text-muted">
+                        Signed in as {user.displayName || user.email}
+                      </p>
+                      <div className="grid grid-cols-2 gap-3">
+                        <Link
+                          to={authDestination}
+                          className="inline-flex items-center justify-center rounded-xl border border-primary/30 bg-primary-soft px-4 py-3 text-body-sm font-heading font-semibold text-text-primary"
+                        >
+                          {isAdmin ? 'Dashboard' : 'Mock Tests'}
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={logout}
+                          className="inline-flex items-center justify-center rounded-xl border border-border px-4 py-3 text-body-sm font-heading font-semibold text-text-secondary"
+                        >
+                          Logout
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Mobile Menu Footer */}
               <div className="mt-12 pt-8" style={{ borderTop: '1px solid #1E4976' }}>

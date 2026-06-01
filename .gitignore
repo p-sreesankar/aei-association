@@ -40,3 +40,4 @@ firebase-service-account.json
 .env.firebase
 
 -firebase-adminsdk-.json
+service-account.json

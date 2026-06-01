@@ -21,6 +21,7 @@ const PATH_TO_SECTION = {
   '/projects':  'projects',
   '/grievance': 'grievance',
   '/contact':   'contact',
+  '/mock-tests': 'mockTests',
 };
 
 const ALL_NAV_LINKS = [
@@ -29,6 +30,7 @@ const ALL_NAV_LINKS = [
   { label: 'Notices', path: '/notices' },
   { label: 'Events', path: '/events' },
   { label: 'Resources', path: '/resources' },
+  { label: 'Mock Tests', path: '/mock-tests' },
   { label: 'Projects', path: '/projects' },
   { label: 'Grievance', path: '/grievance' },
   { label: 'Contact', path: '/contact' },

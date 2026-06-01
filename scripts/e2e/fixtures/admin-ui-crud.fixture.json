@@ -1,0 +1,44 @@
+{
+  "baseUrl": "http://localhost:5175",
+  "loginPath": "/login",
+  "manageTestsPath": "/admin/manage-tests",
+  "adminEmailEnv": "E2E_ADMIN_EMAIL",
+  "adminPasswordEnv": "E2E_ADMIN_PASSWORD",
+  "newTest": {
+    "idPrefix": "e2e-crud",
+    "titlePrefix": "E2E CRUD",
+    "subject": "E2E Automation Subject",
+    "scheme": "2026",
+    "semester": 5,
+    "difficulty": "hard",
+    "startDate": "2026-06-01",
+    "endDate": "2026-12-31",
+    "durationMinutes": 40,
+    "totalMarks": 30
+  },
+  "questions": [
+    {
+      "id": "q-e2e-1",
+      "type": "mcq",
+      "question": "What does CRUD stand for?",
+      "options": [
+        "Create Read Update Delete",
+        "Compute Render Upload Download",
+        "Copy Rename Undo Drop"
+      ],
+      "correctAnswer": 0,
+      "explanation": "CRUD expands to Create, Read, Update, Delete."
+    },
+    {
+      "id": "q-e2e-2",
+      "type": "true-false",
+      "question": "A saved test can be deleted from this screen.",
+      "options": [
+        "True",
+        "False"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Delete action is available for selected tests."
+    }
+  ]
+}
