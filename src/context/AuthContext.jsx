@@ -6,9 +6,8 @@ const AUTH_REGISTRY_KEY = 'aei-mock-test-local-accounts';
 const DEFAULT_ADMIN_EMAILS = [
   import.meta.env.VITE_MOCK_TEST_ADMIN_EMAIL,
   ...(import.meta.env.VITE_MOCK_TEST_ADMIN_EMAILS ? import.meta.env.VITE_MOCK_TEST_ADMIN_EMAILS.split(',') : []),
-  'admin@aei.local',
 ].filter(Boolean).map((entry) => entry.trim().toLowerCase());
-const DEFAULT_ADMIN_PASSWORD = import.meta.env.VITE_MOCK_TEST_ADMIN_PASSWORD || 'aei-admin-2026';
+const DEFAULT_ADMIN_PASSWORD = import.meta.env.VITE_MOCK_TEST_ADMIN_PASSWORD;
 
 function isFirebaseAuthSetupError(error) {
   const code = error?.code || '';

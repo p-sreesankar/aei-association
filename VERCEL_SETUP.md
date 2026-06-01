@@ -52,7 +52,23 @@ This project uses client-side routing. Keep `vercel.json` configured with SPA fa
 
 ---
 
-## Step 4: Add Custom Domain (Optional)
+## Step 4: Configure Environment Variables
+
+To enable admin access to the mock test panel, add these environment variables in Vercel:
+
+1. Go to your Vercel project → **Settings → Environment Variables**
+2. Add the following variables (for Production, Preview, and Development):
+
+| Name | Value |
+|------|-------|
+| `VITE_MOCK_TEST_ADMIN_EMAIL` | `admin@aei.mocktest` |
+| `VITE_MOCK_TEST_ADMIN_PASSWORD` | `AEI-Admin-Secure-2026` |
+
+3. **Important:** After adding variables, go to **Deployments** and click **Redeploy** on the latest deployment (or push a new commit) to apply the changes.
+
+---
+
+## Step 5: Add Custom Domain (Optional)
 
 1. Vercel project → **Settings → Domains**
 2. Add your custom domain
