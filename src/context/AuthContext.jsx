@@ -142,8 +142,8 @@ async function resolveAdminStatus(firebaseUser) {
     }
   }
 
-  // Dev-only email whitelist bypass
-  if (import.meta.env.DEV && email && DEFAULT_ADMIN_EMAILS.includes(email)) {
+  // Email whitelist bypass (works in both DEV and production)
+  if (email && DEFAULT_ADMIN_EMAILS.includes(email)) {
     return true;
   }
 
@@ -263,17 +263,16 @@ function AuthProvider({ children }) {
     }
 
     // If we reach here, we are in pure local mode.
+    // Check admin credentials first (works in both DEV and production)
+    if (DEFAULT_ADMIN_EMAILS.includes(normalizedEmail) && password === DEFAULT_ADMIN_PASSWORD) {
+      const nextUser = createLocalUser(normalizedEmail);
+      setUser(nextUser);
+      setIsAdmin(true);
+      writeLocalAuthSession({ user: nextUser, isAdmin: true });
+      return nextUser;
+    }
+
     if (import.meta.env.DEV) {
-      const isAllowedAdmin = DEFAULT_ADMIN_EMAILS.includes(normalizedEmail) && password === DEFAULT_ADMIN_PASSWORD;
-
-      if (isAllowedAdmin) {
-        const nextUser = createLocalUser(normalizedEmail);
-        setUser(nextUser);
-        setIsAdmin(true);
-        writeLocalAuthSession({ user: nextUser, isAdmin: true });
-        return nextUser;
-      }
-
       const registeredAccount = getLocalAccount(normalizedEmail);
       if (!registeredAccount) {
         const error = new Error('No account found with this email. Please sign up before signing in.');
@@ -294,7 +293,7 @@ function AuthProvider({ children }) {
       return nextUser;
     }
     
-    throw new Error('Local authentication is disabled in production.');
+    throw new Error('Invalid credentials.');
   }
 
   async function registerWithEmail(email, password) {
