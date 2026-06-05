@@ -1,103 +1,174 @@
-AEI Association — Project Structure
-========================================
+═══════════════════════════════════════════════════════════════════════════════
+  AEI STUDENT ASSIST APP — PROJECT FOLDER STRUCTURE
+═══════════════════════════════════════════════════════════════════════════════
 
-aei-association/
+This document describes the logical organization of the codebase. All paths are
+relative to the project root (`/`).
+
+├── ROOT CONFIGURATION
+│   ├── package.json              # Dependencies and npm scripts
+│   ├── vite.config.js            # Vite bundler config with path aliases
+│   ├── tailwind.config.js        # Tailwind theme and design tokens
+│   ├── index.html                # HTML entry point
+│   ├── .env.example              # Environment variable template
+│   └── vercel.json               # Vercel deployment config
 │
-├── public/                         # Static assets served as-is
-│   ├── favicon.svg                 # Site favicon
-│   └── images/                     # Gallery photos, event posters
-│       └── README.md               # Usage guide for this folder
+├── PUBLIC ASSETS
+│   ├── favicon.svg               # Site favicon
+│   └── images/                   # Static images
 │
-├── src/                            # Source code
-│   │
-│   ├── assets/                     # Assets imported in code (processed by Vite)
-│   │   └── README.md               # Usage guide for this folder
-│   │
-│   ├── components/                 # Reusable UI components
-│   │   ├── Footer.jsx              # Site footer with links & social icons
-│   │   ├── Layout.jsx              # Page layout wrapper (Navbar + Footer)
-│   │   ├── LoadingSpinner.jsx      # Loading state component
-│   │   ├── Navbar.jsx              # Top navigation bar (mobile-responsive)
-│   │   ├── ScrollToTop.jsx         # Auto-scroll to top on route change
-│   │   └── SectionHeader.jsx       # Reusable section title component
-│   │
-│   ├── data/                       # ⭐ CONTENT DATA FILES — EDIT THESE TO UPDATE THE SITE
-│   │   ├── about.js                # About section content (heading, paragraphs, team photo)
-│   │   ├── events.js               # Event calendar entries (upcoming & past events)
-│   │   ├── faculty.js              # Contact cards for faculty/coordinators
-│   │   ├── gallery.js              # Photo gallery items (URL, caption, date)
-│   │   ├── notices.js              # Notice board entries (title, date, description, attachment)
-│   │   ├── resources.js            # Downloadable resources (forms, guides, syllabi, lab manuals)
-│   │   └── site-config.js          # Global site configuration (name, tagline, colors, socials, form URL)
-│   │
-│   ├── pages/                      # Page components (one file per route)
-│   │   ├── About.jsx               # /about — About the Association page
-│   │   ├── Contact.jsx             # /contact — Faculty contact cards
-│   │   ├── Events.jsx              # /events — Event calendar (upcoming & past)
-│   │   ├── Gallery.jsx             # /gallery — Photo grid with lightbox
-│   │   ├── Grievance.jsx           # /grievance — Embedded Google Form
-│   │   ├── Home.jsx                # / — Hero + quick links to all sections
-│   │   ├── NotFound.jsx            # 404 page
-│   │   ├── Notices.jsx             # /notices — Notice board
-│   │   └── Resources.jsx           # /resources — Downloadable resources with category filter
-│   │
-│   ├── utils/                      # Helper functions
-│   │   ├── date.js                 # Date formatting & comparison utilities
-│   │   └── helpers.js              # General helpers (initials, truncate, slugify)
-│   │
-│   ├── App.jsx                     # Main app component with routing (HashRouter)
-│   ├── index.css                   # Tailwind CSS + global styles
-│   └── main.jsx                    # React entry point
+├── SCRIPTS (Build/Utility)
+│   ├── firebase/                 # Firebase setup scripts
+│   ├── e2e/                      # End-to-end tests
+│   ├── validate-config.mjs       # Config validation
+│   ├── validate-mock-tests.mjs   # Mock test data validation
+│   └── validate-resources.mjs     # Resources validation
 │
-├── .gitignore                      # Files/folders ignored by Git
-├── DEPLOYMENT_GUIDE.md             # Step-by-step deployment instructions
-├── index.html                      # HTML shell (Google Fonts, meta tags)
-├── package.json                    # Dependencies & scripts
-├── postcss.config.js               # PostCSS config for Tailwind
-├── PRD.md                          # Product Requirements Document
-├── README.md                       # Project overview & usage guide
-├── tailwind.config.js              # Tailwind CSS theme customization
-└── vite.config.js                  # Vite build config (Vercel-friendly base path)
+├── SRC (Application Source)
+│   │
+│   ├── main.jsx                  # React app entry point
+│   ├── App.jsx                   # Root component with routing
+│   └── index.css                 # Global styles and CSS variables
+│   │
+│   ├── assets/                   # Imported assets (images, fonts)
+│   │
+│   ├── components/               # Reusable UI components
+│   │   │
+│   │   ├── auth/
+│   │   │   └── ProtectedRoute.jsx # Auth guard for protected routes
+│   │   │
+│   │   ├── layout/               # Layout components
+│   │   │   ├── Navbar.jsx         # Main navigation bar
+│   │   │   ├── Footer.jsx         # Site footer
+│   │   │   ├── PageLayout.jsx     # Root layout wrapper
+│   │   │   ├── SectionWrapper.jsx # Section background container
+│   │   │   └── index.js           # Barrel exports
+│   │   │
+│   │   └── ui/                   # Reusable UI primitives
+│   │       ├── Button.jsx         # Multi-variant button
+│   │       ├── Card.jsx           # Animated card container
+│   │       ├── Badge.jsx          # Semantic label badges
+│   │       ├── SectionHeader.jsx  # Section titles with animations
+│   │       ├── EmptyState.jsx     # Empty/loading state display
+│   │       ├── PageBanner.jsx     # Hero page banners
+│   │       ├── DataSection.jsx    # Data display section
+│   │       ├── Ticker.jsx         # Scrolling ticker
+│   │       ├── ProjectShowcaseCard.jsx
+│   │       ├── Timer.jsx          # Countdown timer
+│   │       ├── ProgressBar.jsx   # Progress indicator
+│   │       ├── LoadingSpinner.jsx # Loading animation
+│   │       └── index.js           # Barrel exports
+│   │
+│   ├── config/                   # Application configuration
+│   │   ├── firebase.js           # Firebase initialization
+│   │   └── navigation.js         # Nav links, social links, brand config
+│   │
+│   ├── context/                  # React context providers
+│   │   └── AuthContext.jsx       # Authentication state management
+│   │
+│   ├── data/                     # Static data and content
+│   │   ├── about.js              # About page content
+│   │   ├── events.js             # Event listings
+│   │   ├── faculty.js           # Faculty information
+│   │   ├── mock-tests.js         # Mock test definitions
+│   │   ├── notices.js            # Notice board items
+│   │   ├── projects.js           # Project showcase data
+│   │   ├── resources.js          # Study resource links
+│   │   └── site-config.js       # Site-wide feature flags
+│   │
+│   ├── hooks/                    # Custom React hooks
+│   │   └── useAuth.js           # Auth hook re-export
+│   │
+│   ├── pages/                    # Page components (routes)
+│   │   │
+│   │   ├── Home.jsx             # Home page
+│   │   ├── About.jsx            # About page
+│   │   ├── Contact.jsx          # Contact page
+│   │   ├── Events.jsx           # Events listing
+│   │   ├── Gallery.jsx          # Photo gallery
+│   │   ├── Grievance.jsx        # Grievance submission
+│   │   ├── Login.jsx            # Authentication page
+│   │   ├── NotFound.jsx         # 404 page
+│   │   ├── Notices.jsx          # Notice board
+│   │   ├── Projects.jsx         # Project showcase
+│   │   ├── Resources.jsx        # Study resources
+│   │   │
+│   │   ├── admin/
+│   │   │   └── ManageTests.jsx  # Test CRUD management (admin only)
+│   │   │
+│   │   └── mocktest/
+│   │       ├── AdminDashboard.jsx   # Admin dashboard with submissions
+│   │       ├── MockTestIndex.jsx   # Test catalog and performance
+│   │       ├── MockTestQuiz.jsx    # Test-taking interface
+│   │       ├── MockTestResults.jsx # Results display
+│   │       └── MockTestLogin.jsx  # Auth for mock tests
+│   │
+│   ├── services/                 # API and external service integrations
+│   │   └── firestore-mock-tests.js # Firestore CRUD for mock tests
+│   │
+│   └── utils/                    # Utility functions
+│       ├── date.js               # Date formatting helpers
+│       ├── helpers.js            # General utility functions
+│       └── mock-test-storage.js  # Local storage wrapper
+│
+├── DOCUMENTATION
+│   ├── README.md                 # Project overview and setup
+│   ├── REPO_GUIDE_FOR_LLM.md     # AI agent instructions
+│   ├── FOLDER_STRUCTURE.txt      # This file
+│   ├── DESIGN_SYSTEM.md          # Visual design guidelines
+│   ├── LAYOUT_USAGE_GUIDE.md     # Layout component documentation
+│   ├── MAINTENANCE.md             # Maintenance procedures
+│   ├── PRD.md                    # Product requirements
+│   ├── QUICK_START.txt           # Quick start guide
+│   ├── DEPLOYMENT_GUIDE.md       # Deployment instructions
+│   └── VERCEL_SETUP.md           # Vercel-specific setup
+│
+└── FIREBASE CONFIG
+    ├── firestore.rules           # Firestore security rules
+    └── service-account.json     # Firebase service account (gitignored)
 
-========================================
-Key Directories to Know:
-========================================
+═══════════════════════════════════════════════════════════════════════════════
+  PATH ALIASES
+═══════════════════════════════════════════════════════════════════════════════
 
-📂 src/data/
-    ↳ The ONLY folder you need to edit to update content
-    ↳ Each file has detailed instructions at the top
-    ↳ No HTML/CSS knowledge required
+The following aliases are configured in vite.config.js:
 
-📂 src/pages/
-    ↳ One React component per page/route
-    ↳ Rendered by App.jsx via React Router
+  @              → src/
+  @components    → src/components/
+  @context       → src/context/
+  @pages         → src/pages/
+  @data          → src/data/
+  @config        → src/config/
+  @hooks         → src/hooks/
+  @utils         → src/utils/
+  @assets        → src/assets/
 
-📂 src/components/
-    ↳ Shared UI components used across multiple pages
-    ↳ Layout, Navbar, Footer, etc.
+═══════════════════════════════════════════════════════════════════════════════
+  ROUTING STRUCTURE
+═══════════════════════════════════════════════════════════════════════════════
 
-📂 public/
-    ↳ Static files served as-is (not processed by Vite)
-    ↳ Use for large images, favicon, CNAME file (custom domain)
+Public Routes:
+  /               → Home
+  /about          → About
+  /contact        → Contact
+  /events         → Events (if enabled)
+  /notices        → Notices (if enabled)
+  /resources      → Resources (if enabled)
+  /projects       → Projects (if enabled)
+  /grievance      → Grievance (if enabled)
+  /login          → Login page
 
-========================================
-How Content Flows:
-========================================
+Protected Routes (authenticated):
+  /mock-tests                  → Mock test catalog
+  /mock-tests/:testId          → Test quiz
+  /mock-tests/:testId/results  → Test results
 
-1. You edit a data file (e.g., src/data/notices.js) → add a new notice
-2. The corresponding page (e.g., src/pages/Notices.jsx) imports that data
-3. The page renders the data using React components
-4. You push to GitHub → Vercel auto-deploys the latest commit
+Admin Routes (admin only):
+  /admin              → Admin dashboard
+  /admin/manage-tests → Test management
 
-========================================
-Common Tasks:
-========================================
+Legacy Redirects (for backwards compatibility):
+  /mock-test/*        → /mock-tests/*
+  /mock-test/admin   → /admin
 
-Add a notice:           Edit src/data/notices.js
-Add an event:           Edit src/data/events.js
-Add a gallery photo:    Edit src/data/gallery.js
-Update contact info:    Edit src/data/faculty.js
-Change site colors:     Edit src/data/site-config.js (themeColors section)
-Swap Google Form:       Edit src/data/site-config.js (grievanceFormUrl)
-
-========================================
+═══════════════════════════════════════════════════════════════════════════════

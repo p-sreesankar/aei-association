@@ -21,3 +21,4 @@ export { default as Ticker } from './Ticker';
 export { default as ProjectShowcaseCard } from './ProjectShowcaseCard';
 export { default as Timer } from './Timer';
 export { default as ProgressBar } from './ProgressBar';
+export { default as LoadingSpinner } from './LoadingSpinner';

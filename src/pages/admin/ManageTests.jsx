@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+﻿import { useEffect, useMemo, useState } from 'react';
 import { Plus, Save, Trash2, RefreshCw, Pencil, X, Hash } from 'lucide-react';
 import SEO from '@components/SEO';
 import { SectionWrapper } from '@components/layout';
@@ -428,7 +428,7 @@ export default function ManageTests() {
                       </div>
                       <div className="mt-2 flex flex-wrap gap-2 text-caption text-text-muted">
                         <span>{test.questions?.length || 0} questions</span>
-                        <span>•</span>
+                        <span>ΓÇó</span>
                         <span>{test.durationMinutes} min</span>
                       </div>
                     </button>
@@ -613,7 +613,7 @@ export default function ManageTests() {
                           <div key={`${question?.id || 'q'}-${index}`} className="rounded-xl border border-border bg-bg/60 p-3">
                             <div className="flex items-start justify-between gap-3">
                               <div>
-                                <p className="text-caption uppercase tracking-[0.22em] text-text-muted">Q{index + 1} • {question?.type || 'mcq'}</p>
+                                <p className="text-caption uppercase tracking-[0.22em] text-text-muted">Q{index + 1} ΓÇó {question?.type || 'mcq'}</p>
                                 <p className="mt-1 text-body-sm text-text-primary line-clamp-2">{question?.question || '(No question text)'}</p>
                               </div>
                               <div className="flex gap-2">
