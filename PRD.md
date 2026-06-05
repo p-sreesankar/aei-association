@@ -1,6 +1,6 @@
 # Product Requirements Document: AEI Association — AEI, CET
 
-## Version 1.0 · March 5, 2026
+## Version 1.1 · June 3, 2026
 
 ---
 

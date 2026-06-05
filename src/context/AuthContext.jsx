@@ -198,12 +198,10 @@ function AuthProvider({ children }) {
           setLoading(false);
         });
       } catch (error) {
-        if (isFirebaseAuthSetupError(error)) {
-          setAuthMode('local');
-        }
+        // Always try to fall back to local mode on any error
+        setAuthMode('local');
 
         if (import.meta.env.DEV) {
-          setAuthMode('local');
           const storedSession = readLocalAuthSession();
           if (isMounted && storedSession?.user) {
             setUser(storedSession.user);

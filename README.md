@@ -291,3 +291,5 @@ For questions, issues, or suggestions:
 ---
 
 **Built with ❤️ by the AEI Association team**
+
+*Last updated: 2026-06-03*

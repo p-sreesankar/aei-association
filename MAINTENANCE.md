@@ -2,7 +2,7 @@
 
 Audience: Maintainers who update content, keep deployments healthy, and run optional Firebase sync.
 
-Last reviewed: 2026-04-11
+Last reviewed: 2026-06-03
 
 ## 1. Operating Model
 

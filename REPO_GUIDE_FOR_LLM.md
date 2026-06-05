@@ -1,5 +1,7 @@
 # AEI Association Repository Guide
 
+> **Last Updated:** 2026-06-03
+
 This document is a handoff guide for a large external LLM task. It summarizes the repository, how the app is wired, where content lives, and what needs to change when adding a major new feature.
 
 ## 1. What This Repo Is

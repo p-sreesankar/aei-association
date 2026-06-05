@@ -1,5 +1,7 @@
 # Vercel Deployment Setup Guide
 
+> **Last Updated:** 2026-06-03
+
 This guide sets up automatic deployment to Vercel from your GitHub repository.
 
 ---
