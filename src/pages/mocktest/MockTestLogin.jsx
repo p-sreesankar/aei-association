@@ -103,7 +103,7 @@ export default function MockTestLogin() {
                 <ShieldCheck size={14} /> Secure Access
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface2 px-4 py-2">
-                <Sparkles size={14} className="text-primary" /> CET Affiliated
+                <Sparkles size={14} className="text-primary" /> Student Portal
               </span>
             </div>
           </div>
