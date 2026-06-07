@@ -93,19 +93,18 @@ export default function MockTestLogin() {
           <div className="space-y-5">
             <Badge variant="accent" className="w-fit">Mock Test Arena</Badge>
             <h2 className="text-h1 font-heading font-bold text-text-primary">
-              {isSignUp ? "Register for the Mock Test Arena." : "Glassmorphic sign-in for students and admin."}
+              {isSignUp ? "Join the Mock Test Arena." : "Access your mock tests and track progress."}
             </h2>
             <p className="max-w-2xl text-body-lg text-text-secondary">
-              Access scheduled assessments, mock question papers, and keep track of your scores. Admins logging in will automatically be redirected to the control dashboard.
+              Practice for upcoming examinations, review your performance, and prepare with confidence. Your results are saved securely and accessible anytime.
             </p>
             <div className="flex flex-wrap gap-3 text-body-sm text-text-secondary">
-              <span className={`inline-flex items-center gap-2 rounded-full border border-border bg-surface2 px-4 py-2 ${authMode === 'firebase' ? 'text-primary border-primary/30' : ''}`}>
-                <ShieldCheck size={14} /> Firebase Auth active
+              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface2 px-4 py-2">
+                <ShieldCheck size={14} /> Secure Access
               </span>
-              <span className={`inline-flex items-center gap-2 rounded-full border border-border bg-surface2 px-4 py-2 ${authMode === 'local' ? 'text-accent border-accent/30' : ''}`}>
-                <LockKeyhole size={14} /> Local developer fallback
+              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface2 px-4 py-2">
+                <Sparkles size={14} className="text-primary" /> CET Affiliated
               </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface2 px-4 py-2"><Sparkles size={14} className="text-primary" /> Live Syncing</span>
             </div>
           </div>
 
