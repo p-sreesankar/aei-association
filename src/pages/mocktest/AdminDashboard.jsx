@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { BarChart3, Plus, ScrollText, Shield, Trash2 } from 'lucide-react';
+import { BarChart3, FilePlus, Plus, ScrollText, Shield, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import SEO from '@components/SEO';
 import { SectionWrapper } from '@components/layout';
 import { Badge, Button, Card, EmptyState, PageBanner } from '@components/ui';
@@ -38,6 +39,7 @@ function normalizeOptions(rawOptions) {
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('submissions');
   
   const [tests, setTests] = useState([]);
@@ -184,6 +186,9 @@ export default function AdminDashboard() {
             <div className="flex flex-wrap items-center gap-3">
               <Button variant="primary" onClick={handleSeedData} loading={seeding} disabled={seeding}>
                 {seeding ? 'Seeding…' : 'Seed Defaults'}
+              </Button>
+              <Button variant="accent" onClick={() => navigate('/admin/create-test')} icon={<FilePlus size={16} />}>
+                Create New Test
               </Button>
               <Badge variant="accent">{submissions.length} submissions</Badge>
               <Badge variant="academic">{tests.reduce((total, test) => total + (test.questions?.length || 0), 0)} questions</Badge>

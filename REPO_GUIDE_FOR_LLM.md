@@ -1,8 +1,10 @@
 # AEI Association Repository Guide
 
-> **Last Updated:** 2026-06-03
+> **Last Updated:** 2026-06-05
 
 This document is a handoff guide for a large external LLM task. It summarizes the repository, how the app is wired, where content lives, and what needs to change when adding a major new feature.
+
+> **For AI Agents:** Also see `CODING_CONVENTIONS.md` for detailed coding standards and `FOLDER_STRUCTURE.txt` for visual project organization.
 
 ## 1. What This Repo Is
 
@@ -41,15 +43,28 @@ Primary route file: `src/App.jsx`
 
 Routes currently in use:
 
+Public Routes:
 - `/` -> Home
 - `/about` -> About
-- `/notices` -> Notices
-- `/events` -> Events
-- `/resources` -> Resources
-- `/projects` -> Projects
-- `/grievance` -> Grievance
-- `/contact` -> Contact
-- `*` -> NotFound
+- `/notices` -> Notices (if enabled)
+- `/events` -> Events (if enabled)
+- `/resources` -> Resources (if enabled)
+- `/projects` -> Projects (if enabled)
+- `/grievance` -> Grievance (if enabled)
+- `/contact` -> Contact (if enabled)
+- `/login` -> Login
+
+Protected Routes (authenticated):
+- `/mock-tests` -> Mock test catalog
+- `/mock-tests/:testId` -> Test quiz interface
+- `/mock-tests/:testId/results` -> Test results
+
+Admin Routes (admin only):
+- `/admin` -> Admin dashboard
+- `/admin/manage-tests` -> Test CRUD management
+
+Legacy Redirects:
+- `/mock-test/*` -> Redirects to `/mock-tests/*` (backwards compatibility)
 
 Important behavior:
 

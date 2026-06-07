@@ -10,8 +10,9 @@ export default function MockTestLogin() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isAdmin, loading, loginWithEmail, registerWithEmail, authMode } = useAuth();
-  const [email, setEmail] = useState(import.meta.env.DEV ? (import.meta.env.VITE_MOCK_TEST_ADMIN_EMAIL || '') : '');
-  const [password, setPassword] = useState(import.meta.env.DEV ? (import.meta.env.VITE_MOCK_TEST_ADMIN_PASSWORD || '') : '');
+  // SECURITY: Do not pre-fill credentials - users must always enter their own
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);

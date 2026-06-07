@@ -22,3 +22,5 @@ export { default as ProjectShowcaseCard } from './ProjectShowcaseCard';
 export { default as Timer } from './Timer';
 export { default as ProgressBar } from './ProgressBar';
 export { default as LoadingSpinner } from './LoadingSpinner';
+export { default as Modal } from './Modal';
+export { ToastProvider, useToast } from './Toast';

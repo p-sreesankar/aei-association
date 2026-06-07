@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { app, firebaseConfig, hasFirebaseApp } from '@config/firebase';
+import { app, auth, firebaseConfig, hasFirebaseApp } from '@config/firebase';
 
 const AUTH_STORAGE_KEY = 'aei-mock-test-local-auth';
 const AUTH_REGISTRY_KEY = 'aei-mock-test-local-accounts';
@@ -131,6 +131,7 @@ function clearLocalAuthSession() {
 async function resolveAdminStatus(firebaseUser) {
   const email = firebaseUser?.email?.trim().toLowerCase() || '';
 
+  // Check Firebase custom claims first (primary method)
   if (firebaseUser?.getIdTokenResult) {
     try {
       const tokenResult = await firebaseUser.getIdTokenResult();
@@ -142,8 +143,10 @@ async function resolveAdminStatus(firebaseUser) {
     }
   }
 
-  // Email whitelist bypass (works in both DEV and production)
-  if (email && DEFAULT_ADMIN_EMAILS.includes(email)) {
+  // DEV ONLY: Email whitelist for local development
+  // This should NEVER be used in production - set admin claims via Firebase Console instead
+  if (import.meta.env.DEV && email && DEFAULT_ADMIN_EMAILS.includes(email)) {
+    console.warn('[DEV ONLY] Admin status granted via email whitelist. Set admin claims in Firebase Console for production.');
     return true;
   }
 
@@ -229,69 +232,30 @@ function AuthProvider({ children }) {
       throw new Error('Email and password are required.');
     }
 
-    if (app && authMode === 'firebase') {
-      try {
-        const { getAuth, signInWithEmailAndPassword, signOut } = await import('firebase/auth');
-        const auth = getAuth(app);
-        const credential = await signInWithEmailAndPassword(auth, normalizedEmail, password);
-        
-        // Force token refresh to pick up any recently set custom claims
-        await credential.user.getIdToken(true);
-        const admin = await resolveAdminStatus(credential.user);
+    // Use the auth from firebase.js config (synchronously initialized)
+    if (auth) {
+      const { signInWithEmailAndPassword } = await import('firebase/auth');
+      const credential = await signInWithEmailAndPassword(auth, normalizedEmail, password);
+      
+      // Force token refresh to pick up any recently set custom claims
+      await credential.user.getIdToken(true);
+      const admin = await resolveAdminStatus(credential.user);
 
-        const nextUser = {
-          uid: credential.user.uid,
-          email: credential.user.email,
-          displayName: credential.user.displayName || credential.user.email?.split('@')[0] || 'Student',
-        };
+      const nextUser = {
+        uid: credential.user.uid,
+        email: credential.user.email,
+        displayName: credential.user.displayName || credential.user.email?.split('@')[0] || 'Student',
+      };
 
-        setUser(nextUser);
-        setIsAdmin(admin);
-        clearLocalAuthSession();
-        return nextUser;
-      } catch (error) {
-        if (isFirebaseAuthSetupError(error)) {
-          setAuthMode('local');
-        }
-        
-        if (authMode === 'firebase') {
-          throw error;
-        }
-      }
-    }
-
-    // If we reach here, we are in pure local mode.
-    // Check admin credentials first (works in both DEV and production)
-    if (DEFAULT_ADMIN_EMAILS.includes(normalizedEmail) && password === DEFAULT_ADMIN_PASSWORD) {
-      const nextUser = createLocalUser(normalizedEmail);
       setUser(nextUser);
-      setIsAdmin(true);
-      writeLocalAuthSession({ user: nextUser, isAdmin: true });
+      setIsAdmin(admin);
+      setAuthMode('firebase');
+      clearLocalAuthSession();
       return nextUser;
     }
 
-    if (import.meta.env.DEV) {
-      const registeredAccount = getLocalAccount(normalizedEmail);
-      if (!registeredAccount) {
-        const error = new Error('No account found with this email. Please sign up before signing in.');
-        error.code = 'auth/user-not-found';
-        throw error;
-      }
-
-      if (registeredAccount.password !== password) {
-        const error = new Error('The password is invalid or the account credentials do not match.');
-        error.code = 'auth/invalid-credential';
-        throw error;
-      }
-
-      const nextUser = createLocalUser(normalizedEmail);
-      setUser(nextUser);
-      setIsAdmin(false);
-      writeLocalAuthSession({ user: nextUser, isAdmin: false });
-      return nextUser;
-    }
-    
-    throw new Error('Invalid credentials.');
+    // If we reach here, Firebase is not configured - fail instead of local fallback
+    throw new Error('Firebase authentication is not configured. Please check your environment variables.');
   }
 
   async function registerWithEmail(email, password) {
@@ -325,7 +289,8 @@ function AuthProvider({ children }) {
       }
     }
 
-    // Local fallback sign up (development only)
+    // Local fallback sign up (development only) - stores password in localStorage
+    // WARNING: This is insecure for production - only use in local development
     if (import.meta.env.DEV) {
       const existingAccount = getLocalAccount(normalizedEmail);
       if (existingAccount) {
@@ -334,6 +299,9 @@ function AuthProvider({ children }) {
         throw error;
       }
 
+      // SECURITY NOTE: In production, always use Firebase Auth
+      // Local accounts with plain-text passwords should NEVER be used in production
+      console.warn('[DEV ONLY] Local account registration - do not use in production');
       await createFirebaseUserRecord(normalizedEmail, password);
 
       const registry = readLocalAccountRegistry();
@@ -347,7 +315,7 @@ function AuthProvider({ children }) {
       return nextUser;
     }
     
-    throw new Error('Local signup is disabled in production.');
+    throw new Error('Local signup is disabled in production. Firebase Auth is required.');
   }
 
   async function refreshToken() {

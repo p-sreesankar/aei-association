@@ -12,10 +12,11 @@ service cloud.firestore {
       return isSignedIn() && request.auth.token.admin == true;
     }
 
-    // ── Mock test catalog (admin-managed) ─────────────────────
+    // ── Mock test catalog ─────────────────────────────────────
+    // WRITE access restricted to admins only to prevent data tampering
     match /mockTests/{testId} {
       allow read: if isSignedIn();                // Only authenticated users can browse tests
-      allow create, update, delete: if isAdmin();  // Only admins manage tests
+      allow create, update, delete: if isAdmin(); // Only admins can manage tests
     }
 
     // ── Mock test submissions ─────────────────────────────────

@@ -1,16 +1,17 @@
-import { getApp, getApps, initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyCaH79BG80ll6vuHuoLpa8DP6yECmdQZSM',
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'aei-association.firebaseapp.com',
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'aei-association',
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'aei-association.firebasestorage.app',
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '120269872533',
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:120269872533:web:108b7933daf473e6d82a9c',
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || 'G-K97BBNSM95',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 let app = null;
@@ -19,26 +20,19 @@ let db = null;
 let storage = null;
 
 try {
-  if (firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId) {
+  // Validate required configuration
+  const requiredKeys = ['apiKey', 'projectId', 'appId'];
+  const hasRequiredConfig = requiredKeys.every(key => firebaseConfig[key]);
+
+  if (hasRequiredConfig) {
     app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-    // dynamically import auth to avoid bundling duplicate firebase/auth chunks
-    import('firebase/auth')
-      .then((mod) => {
-        try {
-          auth = mod.getAuth(app);
-        } catch (e) {
-          // ignore
-          auth = null;
-        }
-      })
-      .catch(() => {
-        // If dynamic import fails, leave auth null — AuthContext has a fallback to local mode.
-        auth = null;
-      });
+    // Initialize auth synchronously - required for auth state to be available immediately
+    auth = getAuth(app);
     db = getFirestore(app);
     storage = getStorage(app);
   }
-} catch {
+} catch (error) {
+  console.error('Firebase initialization error:', error);
   app = null;
   auth = null;
   db = null;

@@ -13,14 +13,7 @@ import {
   onSnapshot,
   serverTimestamp,
 } from 'firebase/firestore';
-import { db } from '@config/firebase';
-import {
-  getMockTestCatalog as localGetMockTestCatalog,
-  saveMockTestCatalog as localSaveMockTestCatalog,
-  getMockTestSubmissions as localGetSubmissions,
-  saveMockTestSubmission as localSaveSubmission,
-  setMockTestSubmissions as localSetSubmissions,
-} from '@utils/mock-test-storage';
+import { auth, db } from '@config/firebase';
 
 const TESTS_COLLECTION = 'mockTests';
 const SUBMISSIONS_COLLECTION = 'mockTestSubmissions';
@@ -28,33 +21,28 @@ const SUBMISSIONS_COLLECTION = 'mockTestSubmissions';
 // ── Mock Tests Catalog ────────────────────────────────────────────────────────
 
 export async function fetchMockTestCatalog() {
-  if (!db) return localGetMockTestCatalog([]);
+  if (!db) {
+    throw new Error('Firestore database not available');
+  }
 
   try {
     const testsRef = collection(db, TESTS_COLLECTION);
     const snapshot = await getDocs(testsRef);
     const tests = snapshot.docs.map((docSnap) => docSnap.data());
     
-    // Sort by startDate descending by default, or just return as is
     return tests.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
   } catch (error) {
     console.error('Error fetching mock tests from Firestore:', error);
-    return localGetMockTestCatalog([]);
+    throw error;
   }
 }
 
 export async function saveMockTestToFirestore(test) {
   if (!db) {
-    // In local mode, just grab the existing, update this one, and save.
-    const current = localGetMockTestCatalog([]);
-    const existingIndex = current.findIndex(t => t.id === test.id);
-    if (existingIndex >= 0) {
-      current[existingIndex] = test;
-    } else {
-      current.push(test);
-    }
-    localSaveMockTestCatalog(current);
-    return;
+    throw new Error('Firestore database not available');
+  }
+  if (!auth?.currentUser) {
+    throw new Error('Not authenticated with Firebase');
   }
 
   const docRef = doc(db, TESTS_COLLECTION, test.id);
@@ -67,24 +55,22 @@ export async function saveMockTestToFirestore(test) {
 
 export async function deleteMockTestFromFirestore(testId) {
   if (!db) {
-    const current = localGetMockTestCatalog([]);
-    localSaveMockTestCatalog(current.filter(t => t.id !== testId));
-    return;
+    throw new Error('Firestore database not available');
   }
+  if (!auth?.currentUser) {
+    throw new Error('Not authenticated with Firebase');
+  }
+  
   const docRef = doc(db, TESTS_COLLECTION, testId);
   await deleteDoc(docRef);
 }
 
 export async function addQuestionToTest(testId, question) {
   if (!db) {
-    const current = localGetMockTestCatalog([]);
-    const testIndex = current.findIndex(t => t.id === testId);
-    if (testIndex >= 0) {
-      current[testIndex].questions = current[testIndex].questions || [];
-      current[testIndex].questions.push(question);
-      localSaveMockTestCatalog(current);
-    }
-    return;
+    throw new Error('Firestore database not available');
+  }
+  if (!auth?.currentUser) {
+    throw new Error('Not authenticated with Firebase');
   }
 
   const docRef = doc(db, TESTS_COLLECTION, testId);
@@ -98,11 +84,7 @@ export async function addQuestionToTest(testId, question) {
 
 export async function fetchSubmissions(testId = null) {
   if (!db) {
-    let localSubmissions = localGetSubmissions();
-    if (testId) {
-      localSubmissions = localSubmissions.filter(s => s.testId === testId);
-    }
-    return localSubmissions;
+    throw new Error('Firestore database not available');
   }
 
   try {
@@ -113,17 +95,19 @@ export async function fetchSubmissions(testId = null) {
     
     const snapshot = await getDocs(q);
     const submissions = snapshot.docs.map(docSnap => docSnap.data());
-    // Sort by submittedAt descending
     return submissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
   } catch (error) {
     console.error('Error fetching submissions from Firestore:', error);
-    return localGetSubmissions();
+    throw error;
   }
 }
 
 export async function saveSubmission(submission) {
   if (!db) {
-    return localSaveSubmission(submission);
+    throw new Error('Firestore database not available');
+  }
+  if (!auth?.currentUser) {
+    throw new Error('Not authenticated with Firebase');
   }
 
   const docRef = doc(db, SUBMISSIONS_COLLECTION, submission.id);
@@ -135,20 +119,19 @@ export async function saveSubmission(submission) {
 
 export async function deleteSubmission(submissionId) {
   if (!db) {
-    const current = localGetSubmissions();
-    const updated = current.filter(s => s.id !== submissionId);
-    localSetSubmissions(updated);
-    return;
+    throw new Error('Firestore database not available');
   }
+  if (!auth?.currentUser) {
+    throw new Error('Not authenticated with Firebase');
+  }
+  
   const docRef = doc(db, SUBMISSIONS_COLLECTION, submissionId);
   await deleteDoc(docRef);
 }
 
 export function subscribeToSubmissions(callback) {
   if (!db) {
-    // Return a mock unsubscribe function if offline
-    callback(localGetSubmissions());
-    return () => {};
+    throw new Error('Firestore database not available');
   }
 
   const q = query(collection(db, SUBMISSIONS_COLLECTION), orderBy('submittedAt', 'desc'));
@@ -157,15 +140,13 @@ export function subscribeToSubmissions(callback) {
     callback(submissions);
   }, (error) => {
     console.error('Error subscribing to submissions:', error);
-    // fallback
-    callback(localGetSubmissions());
+    throw error;
   });
 }
 
 export async function fetchStudentSubmissions(uid) {
   if (!db) {
-    const localSubmissions = localGetSubmissions();
-    return localSubmissions.filter(s => s.submittedByUid === uid);
+    throw new Error('Firestore database not available');
   }
 
   try {
@@ -175,19 +156,22 @@ export async function fetchStudentSubmissions(uid) {
     );
     const snapshot = await getDocs(q);
     const submissions = snapshot.docs.map(docSnap => docSnap.data());
-    // Sort by submittedAt descending
     return submissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
   } catch (error) {
     console.error('Error fetching student submissions:', error);
-    const localSubmissions = localGetSubmissions();
-    return localSubmissions.filter(s => s.submittedByUid === uid);
+    throw error;
   }
 }
 
 // ── Seed ──────────────────────────────────────────────────────────────────────
 
 export async function seedMockTestsFromLocal(localTests) {
-  if (!db) return;
+  if (!db) {
+    throw new Error('Firestore database not available');
+  }
+  if (!auth?.currentUser) {
+    throw new Error('Not authenticated with Firebase');
+  }
 
   for (const test of localTests) {
     const docRef = doc(db, TESTS_COLLECTION, test.id);

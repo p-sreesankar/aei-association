@@ -110,51 +110,55 @@ export default function Navbar() {
             </Link>
 
             {/* ── Desktop Navigation ─────────────────────────────────── */}
-            <div className="hidden lg:flex items-center gap-1">
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className="relative px-4 py-2 text-body font-heading font-medium transition-colors group"
-                  style={{ color: isActive(link.path) ? '#F0F9FF' : '#7DD3FC' }}
-                  onMouseEnter={(e) => { if (!isActive(link.path)) e.currentTarget.style.color = '#F0F9FF'; }}
-                  onMouseLeave={(e) => { if (!isActive(link.path)) e.currentTarget.style.color = '#7DD3FC'; }}
-                >
-                  {link.label}
-                  {/* Typographic arrow on hover */}
-                  <span
-                    className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 ml-1"
-                    style={{ color: '#0EA5E9' }}
+            <div className="hidden lg:flex items-center gap-0.5 flex-1 min-w-0">
+              {/* Scrollable nav links container */}
+              <div className="flex items-center gap-0.5 overflow-x-auto scrollbar-hide flex-shrink flex-grow">
+                {NAV_LINKS.map((link) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className="relative px-3 py-2 text-body-sm font-heading font-medium transition-colors group whitespace-nowrap flex-shrink-0"
+                    style={{ color: isActive(link.path) ? '#F0F9FF' : '#7DD3FC' }}
+                    onMouseEnter={(e) => { if (!isActive(link.path)) e.currentTarget.style.color = '#F0F9FF'; }}
+                    onMouseLeave={(e) => { if (!isActive(link.path)) e.currentTarget.style.color = '#7DD3FC'; }}
                   >
-                    →
-                  </span>
-
-                  {/* Active Indicator — Sky Blue Dot */}
-                  {isActive(link.path) && (
-                    <motion.div
-                      layoutId="activeNav"
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full"
-                      style={{ backgroundColor: '#0EA5E9' }}
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    />
-                  )}
-
-                  {/* Hover Underline — slides in from left */}
-                  {!isActive(link.path) && (
+                    {link.label}
+                    {/* Typographic arrow on hover */}
                     <span
-                      className="absolute bottom-0.5 left-4 right-4 h-[2px] rounded-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"
-                      style={{ backgroundColor: 'rgba(14,165,233,0.4)' }}
-                    />
-                  )}
-                </Link>
-              ))}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 ml-1"
+                      style={{ color: '#0EA5E9' }}
+                    >
+                      →
+                    </span>
 
+                    {/* Active Indicator — Sky Blue Dot */}
+                    {isActive(link.path) && (
+                      <motion.div
+                        layoutId="activeNav"
+                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full"
+                        style={{ backgroundColor: '#0EA5E9' }}
+                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                      />
+                    )}
+
+                    {/* Hover Underline — slides in from left */}
+                    {!isActive(link.path) && (
+                      <span
+                        className="absolute bottom-0.5 left-3 right-3 h-[2px] rounded-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out"
+                        style={{ backgroundColor: 'rgba(14,165,233,0.4)' }}
+                      />
+                    )}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Auth buttons - always visible, flex-shrink-0 to prevent squishing */}
               {!loading && (
-                <div className="ml-2 flex items-center gap-2">
+                <div className="ml-2 flex items-center gap-1.5 flex-shrink-0">
                   {!user ? (
                     <Link
                       to="/login"
-                      className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2 text-body-sm font-heading font-semibold text-text-primary transition-colors hover:border-primary hover:bg-primary-soft"
+                      className="inline-flex items-center justify-center rounded-lg border border-border px-3 py-1.5 text-body-sm font-heading font-semibold text-text-primary transition-colors hover:border-primary hover:bg-primary-soft whitespace-nowrap"
                     >
                       Login
                     </Link>
@@ -162,14 +166,14 @@ export default function Navbar() {
                     <>
                       <Link
                         to={authDestination}
-                        className="inline-flex items-center justify-center rounded-lg border border-primary/30 bg-primary-soft px-4 py-2 text-body-sm font-heading font-semibold text-text-primary transition-colors hover:bg-primary hover:text-bg"
+                        className="inline-flex items-center justify-center rounded-lg border border-primary/30 bg-primary-soft px-3 py-1.5 text-body-sm font-heading font-semibold text-text-primary transition-colors hover:bg-primary hover:text-bg whitespace-nowrap"
                       >
                         {isAdmin ? 'Dashboard' : 'Mock Tests'}
                       </Link>
                       <button
                         type="button"
                         onClick={logout}
-                        className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2 text-body-sm font-heading font-semibold text-text-secondary transition-colors hover:border-rose-400 hover:text-rose-300"
+                        className="inline-flex items-center justify-center rounded-lg border border-border px-3 py-1.5 text-body-sm font-heading font-semibold text-text-secondary transition-colors hover:border-rose-400 hover:text-rose-300 whitespace-nowrap"
                       >
                         Logout
                       </button>
