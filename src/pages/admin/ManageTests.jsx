@@ -75,17 +75,17 @@ export default function ManageTests() {
     return Array.from(uniq);
   }, [tests]);
 
-  // Load catalog
+  // Load catalog — reads searchParams directly so it's always current (not stale closure)
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
+      // Read param directly at call-time to avoid stale closure
+      const testIdParam = searchParams.get('testId');
+      const isNewAction = searchParams.get('action') === 'new';
+
       try {
-        let catalog = await fetchMockTestCatalog();
-        if (catalog.length === 0) {
-          await seedMockTestsFromLocal(MOCK_TESTS);
-          catalog = await fetchMockTestCatalog();
-        }
+        const catalog = await fetchMockTestCatalog();
 
         if (!catalog.length) {
           catalog = getMockTestCatalog(MOCK_TESTS);
@@ -93,13 +93,15 @@ export default function ManageTests() {
 
         if (!cancelled) {
           setTests(catalog);
-          // Check query parameters first, otherwise select first test
-          if (searchParams.get('action') === 'new') {
+
+          if (isNewAction) {
             setSelectedId('');
             setDraft(buildDraft(null));
             setSearchParams({});
           } else {
-            const initial = catalog[0] || null;
+            // Prefer testId from URL param, fall back to first test
+            const initialFromParam = testIdParam ? catalog.find((t) => t.id === testIdParam) : null;
+            const initial = initialFromParam || catalog[0] || null;
             setSelectedId(initial?.id || '');
             setDraft(buildDraft(initial));
           }
@@ -115,9 +117,9 @@ export default function ManageTests() {
 
     load();
     return () => { cancelled = true; };
-  }, []);
+  }, [searchParams]);
 
-  // Listen to searchParams changes
+  // Listen to searchParams changes (e.g. action=new from the Create New Test button)
   useEffect(() => {
     if (searchParams.get('action') === 'new') {
       setSelectedId('');
@@ -441,7 +443,7 @@ export default function ManageTests() {
                       <div className="mt-2 flex justify-end gap-2">
                         <button
                           type="button"
-                          onClick={() => handleDelete(test.id)}
+                          onClick={() => handleDelete(test._docId || test.id)}
                           className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-caption text-text-muted transition-colors hover:bg-rose-500/20 hover:text-rose-400"
                         >
                           <Trash2 size={12} />

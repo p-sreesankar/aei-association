@@ -28,9 +28,19 @@ export async function fetchMockTestCatalog() {
   try {
     const testsRef = collection(db, TESTS_COLLECTION);
     const snapshot = await getDocs(testsRef);
-    const tests = snapshot.docs.map((docSnap) => docSnap.data());
+    const tests = snapshot.docs.map((docSnap) => {
+      const data = docSnap.data();
+      // Always carry the Firestore document ID as _docId so we can delete by it
+      return { ...data, _docId: docSnap.id };
+    });
     
-    return tests.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+    const sorted = [...tests];
+    sorted.sort((a, b) => {
+      const aTime = a?.startDate ? new Date(a.startDate).getTime() : 0;
+      const bTime = b?.startDate ? new Date(b.startDate).getTime() : 0;
+      return bTime - aTime;
+    });
+    return sorted;
   } catch (error) {
     console.error('Error fetching mock tests from Firestore:', error);
     throw error;
@@ -60,8 +70,11 @@ export async function deleteMockTestFromFirestore(testId) {
   if (!auth?.currentUser) {
     throw new Error('Not authenticated with Firebase');
   }
+  if (!testId || typeof testId !== 'string' || !testId.trim()) {
+    throw new Error('Invalid test ID — cannot delete.');
+  }
   
-  const docRef = doc(db, TESTS_COLLECTION, testId);
+  const docRef = doc(db, TESTS_COLLECTION, testId.trim());
   await deleteDoc(docRef);
 }
 
