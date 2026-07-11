@@ -19,20 +19,7 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin(); // Only admins can manage tests
     }
 
-    // ── Mock test submissions ─────────────────────────────────
-    match /mockTestSubmissions/{submissionId} {
-      // Admins can read all submissions
-      // Authenticated users can read their own submissions
-      allow read: if isAdmin()
-                  || (isSignedIn() && resource.data.submittedByUid == request.auth.uid);
-
-      // Authenticated users can create only their own submissions
-      allow create: if isSignedIn()
-            && request.resource.data.submittedByUid == request.auth.uid;
-
-      // Only admins can update or delete submissions
-      allow update, delete: if isAdmin();
-    }
+    // Learner attempts are stored only in the browser and are not written to Firestore.
 
     // ── Content sync (read-only for app, written by server SDK) ──
     match /content/{document=**} {

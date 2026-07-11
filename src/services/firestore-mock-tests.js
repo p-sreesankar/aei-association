@@ -16,7 +16,6 @@ import {
 import { auth, db } from '@config/firebase';
 
 const TESTS_COLLECTION = 'mockTests';
-const SUBMISSIONS_COLLECTION = 'mockTestSubmissions';
 
 // ── Mock Tests Catalog ────────────────────────────────────────────────────────
 
@@ -91,89 +90,6 @@ export async function addQuestionToTest(testId, question) {
     questions: arrayUnion(question),
     updatedAt: serverTimestamp(),
   });
-}
-
-// ── Submissions ───────────────────────────────────────────────────────────────
-
-export async function fetchSubmissions(testId = null) {
-  if (!db) {
-    throw new Error('Firestore database not available');
-  }
-
-  try {
-    let q = collection(db, SUBMISSIONS_COLLECTION);
-    if (testId) {
-      q = query(q, where('testId', '==', testId));
-    }
-    
-    const snapshot = await getDocs(q);
-    const submissions = snapshot.docs.map(docSnap => docSnap.data());
-    return submissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
-  } catch (error) {
-    console.error('Error fetching submissions from Firestore:', error);
-    throw error;
-  }
-}
-
-export async function saveSubmission(submission) {
-  if (!db) {
-    throw new Error('Firestore database not available');
-  }
-  if (!auth?.currentUser) {
-    throw new Error('Not authenticated with Firebase');
-  }
-
-  const docRef = doc(db, SUBMISSIONS_COLLECTION, submission.id);
-  await setDoc(docRef, {
-    ...submission,
-    createdAt: serverTimestamp(),
-  });
-}
-
-export async function deleteSubmission(submissionId) {
-  if (!db) {
-    throw new Error('Firestore database not available');
-  }
-  if (!auth?.currentUser) {
-    throw new Error('Not authenticated with Firebase');
-  }
-  
-  const docRef = doc(db, SUBMISSIONS_COLLECTION, submissionId);
-  await deleteDoc(docRef);
-}
-
-export function subscribeToSubmissions(callback) {
-  if (!db) {
-    throw new Error('Firestore database not available');
-  }
-
-  const q = query(collection(db, SUBMISSIONS_COLLECTION), orderBy('submittedAt', 'desc'));
-  return onSnapshot(q, (snapshot) => {
-    const submissions = snapshot.docs.map((docSnap) => docSnap.data());
-    callback(submissions);
-  }, (error) => {
-    console.error('Error subscribing to submissions:', error);
-    throw error;
-  });
-}
-
-export async function fetchStudentSubmissions(uid) {
-  if (!db) {
-    throw new Error('Firestore database not available');
-  }
-
-  try {
-    const q = query(
-      collection(db, SUBMISSIONS_COLLECTION),
-      where('submittedByUid', '==', uid)
-    );
-    const snapshot = await getDocs(q);
-    const submissions = snapshot.docs.map(docSnap => docSnap.data());
-    return submissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
-  } catch (error) {
-    console.error('Error fetching student submissions:', error);
-    throw error;
-  }
 }
 
 // ── Seed ──────────────────────────────────────────────────────────────────────

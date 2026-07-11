@@ -19,6 +19,7 @@ const Notices          = lazy(() => import('@pages/Notices'));
 const Events           = lazy(() => import('@pages/Events'));
 const Resources        = lazy(() => import('@pages/Resources'));
 const Projects         = lazy(() => import('@pages/Projects'));
+const SeniorProjects   = lazy(() => import('@pages/SeniorProjects'));
 const Grievance        = lazy(() => import('@pages/Grievance'));
 const Contact          = lazy(() => import('@pages/Contact'));
 const NotFound         = lazy(() => import('@pages/NotFound'));
@@ -52,6 +53,7 @@ export default function App() {
                 {SECTIONS.notices   && <Route path="/notices"   element={<Notices />} />}
                 {SECTIONS.events    && <Route path="/events"    element={<Events />} />}
                 {SECTIONS.resources && <Route path="/resources"  element={<Resources />} />}
+                {SECTIONS.seniorProjects && <Route path="/senior-projects" element={<SeniorProjects />} />}
                 {SECTIONS.projects  && <Route path="/projects"   element={<Projects />} />}
                 {SECTIONS.grievance && <Route path="/grievance"  element={<Grievance />} />}
                 {SECTIONS.contact   && <Route path="/contact"    element={<Contact />} />}
@@ -59,15 +61,9 @@ export default function App() {
                 {/* Mock tests routes - protected */}
                 {SECTIONS.mockTests && (
                   <>
-                    <Route path="/mock-tests" element={
-                      <ProtectedRoute><MockTestIndex /></ProtectedRoute>
-                    } />
-                    <Route path="/mock-tests/:testId" element={
-                      <ProtectedRoute><MockTestQuiz /></ProtectedRoute>
-                    } />
-                    <Route path="/mock-tests/:testId/results" element={
-                      <ProtectedRoute><MockTestResults /></ProtectedRoute>
-                    } />
+                    <Route path="/mock-tests" element={<MockTestIndex />} />
+                    <Route path="/mock-tests/:testId" element={<MockTestQuiz />} />
+                    <Route path="/mock-tests/:testId/results" element={<MockTestResults />} />
                   </>
                 )}
 
@@ -88,7 +84,7 @@ export default function App() {
 
                 {/* Legacy route redirects for backwards compatibility */}
                 <Route path="/mock-test"        element={<Navigate to="/mock-tests" replace />} />
-                <Route path="/mock-test/login"  element={<Navigate to="/login"     replace />} />
+                <Route path="/mock-test/login"  element={<Navigate to="/mock-tests" replace />} />
                 <Route path="/mock-test/quiz/:testId" element={<Navigate to="/mock-tests/:testId" replace />} />
                 <Route path="/mock-test/admin"  element={<Navigate to="/admin"      replace />} />
 

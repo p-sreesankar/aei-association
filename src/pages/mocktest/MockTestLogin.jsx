@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { LockKeyhole, ShieldCheck, Sparkles } from 'lucide-react';
+import { LockKeyhole, ShieldCheck } from 'lucide-react';
 import SEO from '@components/SEO';
 import { SectionWrapper } from '@components/layout';
 import { Badge, Button, Card, PageBanner } from '@components/ui';
@@ -9,11 +9,9 @@ import { useAuth } from '@context/AuthContext';
 export default function MockTestLogin() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, isAdmin, loading, loginWithEmail, registerWithEmail, authMode } = useAuth();
-  // SECURITY: Do not pre-fill credentials - users must always enter their own
+  const { user, isAdmin, loading, loginWithEmail } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -31,26 +29,14 @@ export default function MockTestLogin() {
     setError('');
 
     try {
-      if (isSignUp) {
-        await registerWithEmail(email, password);
-      } else {
-        await loginWithEmail(email, password);
-      }
+      await loginWithEmail(email, password);
       // Redirection is handled by the useEffect hook above upon state change
     } catch (loginError) {
       const msg = loginError?.message || '';
       const code = loginError?.code || '';
-      
+
       if (code === 'auth/user-not-found' || msg.includes('user-not-found') || msg.includes('invalid-credential') || code === 'auth/invalid-credential') {
-        if (isSignUp) {
-          setError('Unable to register user. Please try again with valid credentials.');
-        } else {
-          setError('No account found with this email, or invalid credentials. If you haven\'t signed up yet, click "Create an account" below to register.');
-        }
-      } else if (code === 'auth/email-already-in-use') {
-        setError('This email address is already in use. Please sign in instead.');
-      } else if (code === 'auth/weak-password') {
-        setError('Password should be at least 6 characters.');
+        setError('No account found with this email, or the password is incorrect.');
       } else if (code === 'auth/invalid-email') {
         setError('Please enter a valid email address.');
       } else {
@@ -71,15 +57,15 @@ export default function MockTestLogin() {
 
   return (
     <>
-      <SEO title={isSignUp ? "Mock Test Sign Up" : "Mock Test Login"} description="Sign in or register to access mock tests and view your performance dashboard." />
+      <SEO title="Admin Login" description="Mock tests are open access. Sign in only to manage the test catalog and admin tools." />
 
       <PageBanner
-        title={isSignUp ? "Create an Account" : "Mock Test Arena Login"}
-        subtitle={isSignUp ? "Sign up to track your scores and practice scheduled assessments." : "Sign in to access student mock tests, timed practices, and review your performance scores."}
+        title="Admin Sign In"
+        subtitle="Students can open mock tests directly without logging in. Use this form only for admin access."
         breadcrumb={[
           { label: 'Home', path: '/' },
           { label: 'Mock Tests', path: '/mock-tests' },
-          { label: isSignUp ? 'Sign Up' : 'Login', path: '/login' },
+          { label: 'Admin Login', path: '/login' },
         ]}
         gradientFrom="from-[#0C1D34]"
         gradientTo="to-[#0A1628]"
@@ -91,19 +77,19 @@ export default function MockTestLogin() {
 
         <div className="relative z-[1] section-container grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-center">
           <div className="space-y-5">
-            <Badge variant="accent" className="w-fit">Mock Test Arena</Badge>
+            <Badge variant="accent" className="w-fit">Open Access Mock Tests</Badge>
             <h2 className="text-h1 font-heading font-bold text-text-primary">
-              {isSignUp ? "Join the Mock Test Arena." : "Access your mock tests and track progress."}
+              Mock tests are open to students without any sign in.
             </h2>
             <p className="max-w-2xl text-body-lg text-text-secondary">
-              Practice for upcoming examinations, review your performance, and prepare with confidence. Your results are saved securely and accessible anytime.
+              Students can attempt tests, review their latest result, and keep past attempts in their own browser. This form is reserved for admin access.
             </p>
             <div className="flex flex-wrap gap-3 text-body-sm text-text-secondary">
               <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface2 px-4 py-2">
-                <ShieldCheck size={14} /> Secure Access
+                <ShieldCheck size={14} /> Admin Access
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface2 px-4 py-2">
-                <Sparkles size={14} className="text-primary" /> Student Portal
+                <LockKeyhole size={14} className="text-primary" /> Sign In Only
               </span>
             </div>
           </div>
@@ -112,10 +98,10 @@ export default function MockTestLogin() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <p className="text-caption uppercase tracking-[0.24em] text-text-muted">
-                  {isSignUp ? 'New Account Registration' : 'Account Credentials'}
+                  Admin credentials
                 </p>
                 <h3 className="mt-2 text-h3 font-heading font-bold text-text-primary">
-                  {isSignUp ? 'Create your profile' : 'Enter your details'}
+                  Enter your details
                 </h3>
               </div>
 
@@ -152,33 +138,11 @@ export default function MockTestLogin() {
               )}
 
               <Button type="submit" variant="primary" className="w-full" loading={submitting}>
-                {isSignUp ? 'Create Account & Sign In' : 'Sign In'}
+                Sign In
               </Button>
 
               <p className="text-center text-body-sm text-text-secondary mt-4">
-                {isSignUp ? (
-                  <>
-                    Already have an account?{' '}
-                    <button
-                      type="button"
-                      onClick={() => { setIsSignUp(false); setError(''); }}
-                      className="text-primary hover:underline font-semibold"
-                    >
-                      Sign In
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    Don't have an account?{' '}
-                    <button
-                      type="button"
-                      onClick={() => { setIsSignUp(true); setError(''); }}
-                      className="text-primary hover:underline font-semibold"
-                    >
-                      Create an account
-                    </button>
-                  </>
-                )}
+                Students do not need an account to use mock tests.
               </p>
             </form>
           </Card>

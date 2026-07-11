@@ -112,6 +112,7 @@ const SECTIONS = {
   events:    true,   // Events page
   resources: true,   // Resources / downloads page
   mockTests: true,   // Mock tests portal and quiz routes
+  seniorProjects: true, // Senior projects showcase page
   projects:  false,  // Projects showcase page (temporarily disabled)
   grievance: true,   // Anonymous grievance form page
   admin:     true,   // Admin routes (protected)

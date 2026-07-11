@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CalendarDays, Clock3, Filter, Layers3, Search, ShieldCheck, Sparkles, LogOut, GraduationCap, TrendingUp } from 'lucide-react';
+import { CalendarDays, Clock3, Filter, Layers3, Search, Sparkles, TrendingUp, History, ChevronDown, ChevronUp } from 'lucide-react';
 import SEO from '@components/SEO';
 import { SectionWrapper } from '@components/layout';
 import { Badge, Card, EmptyState, PageBanner } from '@components/ui';
 import { MOCK_TESTS } from '@data/mock-tests';
 import { formatDate, isUpcoming } from '@utils/date';
-import { getMockTestCatalog } from '@utils/mock-test-storage';
-import { fetchMockTestCatalog, seedMockTestsFromLocal, fetchStudentSubmissions } from '@/services/firestore-mock-tests';
-import { useAuth } from '@context/AuthContext';
+import { getMockTestCatalog, getMockTestSubmissions } from '@utils/mock-test-storage';
+import { fetchMockTestCatalog, seedMockTestsFromLocal } from '@/services/firestore-mock-tests';
 
 function difficultyVariant(difficulty) {
   if (difficulty === 'easy') return 'success';
@@ -74,14 +73,13 @@ function MockTestCard({ test, onOpen }) {
 
 export default function MockTestIndex() {
   const navigate = useNavigate();
-  const { user, isAdmin, logout } = useAuth();
   const [query, setQuery] = useState('');
   const [subject, setSubject] = useState('all');
 
   const [tests, setTests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [submissions, setSubmissions] = useState([]);
-  const [submissionsLoading, setSubmissionsLoading] = useState(true);
+  const [submissions, setSubmissions] = useState(() => getMockTestSubmissions());
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -101,21 +99,19 @@ export default function MockTestIndex() {
     }
     load();
 
-    async function loadSubmissions() {
-      if (!user?.uid) return;
-      try {
-        const subs = await fetchStudentSubmissions(user.uid);
-        if (!cancelled) setSubmissions(subs);
-      } catch (err) {
-        console.error("Failed to load submissions:", err);
-      } finally {
-        if (!cancelled) setSubmissionsLoading(false);
-      }
-    }
-    loadSubmissions();
+    setSubmissions(getMockTestSubmissions());
 
     return () => { cancelled = true; };
-  }, [user?.uid]);
+  }, []);
+
+  useEffect(() => {
+    const syncSubmissions = () => setSubmissions(getMockTestSubmissions());
+
+    syncSubmissions();
+    window.addEventListener('storage', syncSubmissions);
+
+    return () => window.removeEventListener('storage', syncSubmissions);
+  }, []);
 
   const subjects = useMemo(() => {
     const uniqueSubjects = Array.from(new Set(tests.map((test) => test.subject)));
@@ -160,7 +156,7 @@ export default function MockTestIndex() {
 
       <PageBanner
         title="Mock Test Arena"
-        subtitle="Access scheduled assessments, practice under exam conditions, and view your performance dashboard."
+        subtitle="Access scheduled assessments, practice under exam conditions, and view your browser-local attempt history."
         breadcrumb={[
           { label: 'Home', path: '/' },
           { label: 'Mock Test', path: '/mock-test' },
@@ -174,42 +170,8 @@ export default function MockTestIndex() {
         <div className="pointer-events-none absolute -bottom-28 left-0 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl" />
 
         <div className="relative z-[1] section-container">
-          
-          {/* Student Welcome / Auth Bar */}
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-border bg-[rgba(15,39,68,0.5)] p-5 backdrop-blur-xl shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/20 text-primary">
-                <GraduationCap size={24} />
-              </div>
-              <div>
-                <p className="text-body-sm text-text-secondary">Welcome back,</p>
-                <h2 className="text-h3 font-heading font-bold text-text-primary">{user?.displayName || user?.email}</h2>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              {isAdmin && (
-                <button
-                  type="button"
-                  onClick={() => navigate('/admin')}
-                  className="btn-primary flex items-center gap-2 py-2.5"
-                >
-                  <ShieldCheck size={16} />
-                  Admin Control
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={logout}
-                className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface2 px-4 py-2.5 text-body-sm font-semibold text-text-primary hover:bg-surface3 hover:text-rose-400 transition-all"
-              >
-                <LogOut size={16} className="text-rose-400" />
-                Sign Out
-              </button>
-            </div>
-          </div>
-
           {/* Student Performance Dashboard */}
-          {!submissionsLoading && Object.keys(lastScorePerSubject).length > 0 && (
+          {Object.keys(lastScorePerSubject).length > 0 && (
             <div className="mb-8 rounded-3xl border border-border bg-gradient-to-r from-[rgba(14,165,233,0.1)] to-[rgba(245,158,11,0.05)] p-6 shadow-md">
               <div className="mb-4 flex items-center gap-2">
                 <TrendingUp size={20} className="text-primary" />
@@ -241,6 +203,79 @@ export default function MockTestIndex() {
                   );
                 })}
               </div>
+            </div>
+          )}
+
+          {/* Previous Attempts History (Lazy Loaded) */}
+          {submissions.length > 0 && (
+            <div className="mb-8 rounded-3xl border border-border bg-[rgba(15,39,68,0.6)] overflow-hidden shadow-md">
+              <button
+                type="button"
+                onClick={() => setShowHistory(!showHistory)}
+                className="flex w-full items-center justify-between p-5 text-left hover:bg-surface2/40 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <History size={20} className="text-primary" />
+                  <h3 className="text-h4 font-heading font-bold text-text-primary">Previous Attempts</h3>
+                  <Badge variant="muted">{submissions.length}</Badge>
+                </div>
+                {showHistory ? (
+                  <ChevronUp size={20} className="text-text-muted" />
+                ) : (
+                  <ChevronDown size={20} className="text-text-muted" />
+                )}
+              </button>
+              
+              {showHistory && (
+                <div className="border-t border-border">
+                  <div className="max-h-96 overflow-y-auto p-4 space-y-3">
+                    {submissions.map((sub) => {
+                      const percent = sub.totalQuestions > 0 
+                        ? Math.round((sub.score / sub.totalQuestions) * 100) 
+                        : 0;
+                      const isPass = percent >= 50;
+                      
+                      return (
+                        <button
+                          key={sub.id}
+                          type="button"
+                          onClick={() => navigate(`/mock-tests/${sub.testId}/results`, { state: { submission: sub } })}
+                          className="w-full rounded-2xl border border-border bg-surface2/60 p-4 text-left hover:border-primary/50 hover:bg-surface2 transition-all group"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-body-md font-semibold text-text-primary line-clamp-1 group-hover:text-primary transition-colors">
+                                {sub.testTitle || 'Mock Test'}
+                              </h4>
+                              <div className="mt-1 flex flex-wrap items-center gap-2 text-caption text-text-muted">
+                                <span>{sub.testSubject || 'General'}</span>
+                                <span>•</span>
+                                <span>{new Date(sub.submittedAt).toLocaleDateString()}</span>
+                                <span>•</span>
+                                <span>{new Date(sub.submittedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                              </div>
+                            </div>
+                            <div className="flex flex-col items-end gap-1">
+                              <Badge variant={isPass ? 'success' : 'urgent'} size="sm">
+                                {percent}%
+                              </Badge>
+                              <span className="text-caption text-text-secondary font-medium">
+                                {sub.score}/{sub.totalQuestions}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="mt-3 flex items-center gap-2 text-caption text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span>View detailed results with answer explanations</span>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -285,12 +320,6 @@ export default function MockTestIndex() {
 
             <div className="flex flex-wrap items-center justify-between gap-3 text-body-sm text-text-secondary">
               <span>{filteredTests.length} tests available</span>
-              {isAdmin && (
-                <button type="button" onClick={() => navigate('/admin')} className="inline-flex items-center gap-2 text-primary hover:text-primary-bright transition-colors">
-                  <ShieldCheck size={14} />
-                  Admin backdoor
-                </button>
-              )}
             </div>
           </div>
 

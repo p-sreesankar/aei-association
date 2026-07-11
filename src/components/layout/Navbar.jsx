@@ -155,14 +155,7 @@ export default function Navbar() {
               {/* Auth buttons - always visible, flex-shrink-0 to prevent squishing */}
               {!loading && (
                 <div className="ml-2 flex items-center gap-1.5 flex-shrink-0">
-                  {!user ? (
-                    <Link
-                      to="/login"
-                      className="inline-flex items-center justify-center rounded-lg border border-border px-3 py-1.5 text-body-sm font-heading font-semibold text-text-primary transition-colors hover:border-primary hover:bg-primary-soft whitespace-nowrap"
-                    >
-                      Login
-                    </Link>
-                  ) : (
+                  {user && (
                     <>
                       <Link
                         to={authDestination}
@@ -219,7 +212,7 @@ export default function Navbar() {
                   >
                     <Link
                       to={link.path}
-                      className="block px-6 py-4 rounded-lg min-h-[48px] flex items-center text-body-lg font-heading font-semibold transition-all duration-200"
+                      className="flex px-6 py-4 rounded-lg min-h-[48px] items-center text-body-lg font-heading font-semibold transition-all duration-200"
                       style={{
                         color: isActive(link.path) ? '#F0F9FF' : '#7DD3FC',
                         backgroundColor: isActive(link.path) ? 'rgba(14,165,233,0.12)' : 'transparent',
@@ -239,14 +232,7 @@ export default function Navbar() {
 
               {!loading && (
                 <div className="mt-8 rounded-2xl border border-border bg-surface p-4">
-                  {!user ? (
-                    <Link
-                      to="/login"
-                      className="inline-flex w-full items-center justify-center rounded-xl bg-primary px-4 py-3 text-body-sm font-heading font-semibold text-bg"
-                    >
-                      Login
-                    </Link>
-                  ) : (
+                  {user && (
                     <div className="space-y-3">
                       <p className="text-center text-body-sm text-text-muted">
                         Signed in as {user.displayName || user.email}

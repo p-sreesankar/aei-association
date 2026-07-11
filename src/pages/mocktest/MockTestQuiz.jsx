@@ -8,8 +8,7 @@ import { Badge, Button, Card, EmptyState, PageBanner } from '@components/ui';
 import { MOCK_TESTS } from '@data/mock-tests';
 import { formatDate } from '@utils/date';
 import { getMockTestCatalog, saveMockTestSubmission } from '@utils/mock-test-storage';
-import { fetchMockTestCatalog, saveSubmission } from '@/services/firestore-mock-tests';
-import { useAuth } from '@context/AuthContext';
+import { fetchMockTestCatalog } from '@/services/firestore-mock-tests';
 
 function formatTime(totalSeconds) {
   const safeSeconds = Math.max(0, totalSeconds);
@@ -33,7 +32,6 @@ function stateStyles(state) {
 export default function MockTestQuiz() {
   const navigate = useNavigate();
   const { testId } = useParams();
-  const { user } = useAuth();
 
   const [test, setTest] = useState(null);
   const [testLoading, setTestLoading] = useState(true);
@@ -121,20 +119,23 @@ export default function MockTestQuiz() {
       testTitle: test.title,
       testSubject: test.subject,
       submittedAt: new Date().toISOString(),
-      submittedBy: user?.email || 'guest',
-      submittedByUid: user?.uid || null,
+      submittedBy: 'Anonymous learner',
+      submittedByUid: null,
       score,
       totalQuestions: test.questions.length,
       totalMarks: test.totalMarks,
       durationMinutes: test.durationMinutes,
       answers: responses,
+      questions: test.questions.map((q) => ({
+        id: q.id,
+        question: q.question,
+        options: q.options,
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation,
+      })),
     };
 
-    try {
-      await saveSubmission(submission);
-    } catch {
-      saveMockTestSubmission(submission);
-    }
+    saveMockTestSubmission(submission);
 
     setSubmitted(true);
     setSubmissionSummary(submission);

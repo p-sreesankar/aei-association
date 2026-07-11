@@ -53,6 +53,15 @@ const quickLinks = [
     hoverBorder: 'hover:border-border-bright',
   },
   {
+    to: '/senior-projects',
+    section: 'seniorProjects',
+    label: 'Senior Projects',
+    description: 'Final-year project topics & teams',
+    icon: FolderGit2,
+    color: 'bg-primary-soft text-primary',
+    hoverBorder: 'hover:border-border-bright',
+  },
+  {
     to: '/projects',
     section: 'projects',
     label: 'Projects',

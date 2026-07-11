@@ -56,6 +56,19 @@ function getMockTestSubmissions() {
   return Array.isArray(submissions) ? submissions : [];
 }
 
+function getLatestMockTestSubmission(testId) {
+  const submissions = getMockTestSubmissions();
+  const matchingSubmissions = testId
+    ? submissions.filter((submission) => submission?.testId === testId)
+    : submissions;
+
+  if (matchingSubmissions.length === 0) {
+    return null;
+  }
+
+  return [...matchingSubmissions].sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0))[0] || null;
+}
+
 function saveMockTestSubmission(submission) {
   const nextSubmissions = [submission, ...getMockTestSubmissions()].slice(0, 100);
   writeJson(SUBMISSIONS_STORAGE_KEY, nextSubmissions);
@@ -69,6 +82,7 @@ function setMockTestSubmissions(submissions) {
 export {
   CUSTOM_TESTS_STORAGE_KEY,
   SUBMISSIONS_STORAGE_KEY,
+  getLatestMockTestSubmission,
   getMockTestCatalog,
   getMockTestSubmissions,
   saveMockTestCatalog,

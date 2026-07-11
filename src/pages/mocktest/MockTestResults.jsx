@@ -6,11 +6,12 @@
  */
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, Eye, EyeOff, BookOpen, Check, X } from 'lucide-react';
 import { Badge, Button, Card, EmptyState, PageBanner } from '@components/ui';
 import { SectionWrapper } from '@components/layout';
 import SEO from '@components/SEO';
 import { formatDate } from '@utils/date';
+import { getLatestMockTestSubmission } from '@utils/mock-test-storage';
 
 /**
  * Calculates the percentage score
@@ -43,14 +44,18 @@ export default function MockTestResults() {
 
   const [submission, setSubmission] = useState(state?.submission || null);
   const [loading, setLoading] = useState(!state?.submission);
+  const [showAnswerKey, setShowAnswerKey] = useState(false);
 
-  // Try to load from local storage if not in navigation state
   useEffect(() => {
-    if (!submission && testId) {
-      // For now, if no submission in state, show a message
-      // In production, this could fetch from Firestore or local storage
+    if (submission) {
       setLoading(false);
+      return;
     }
+
+    if (testId) {
+      setSubmission(getLatestMockTestSubmission(testId));
+    }
+    setLoading(false);
   }, [testId, submission]);
 
   if (loading) {
@@ -76,7 +81,7 @@ export default function MockTestResults() {
             <EmptyState
               icon="search"
               title="Results not found"
-              subtitle="We couldn't find your submission. It may have expired or you may need to complete the test again."
+              subtitle="We couldn't find a saved attempt for this browser. Open the test again and finish it here to view the result."
               action={
                 <Button variant="primary" onClick={() => navigate('/mock-tests')}>
                   Back to Mock Tests
@@ -178,6 +183,15 @@ export default function MockTestResults() {
               >
                 Retry This Test
               </Button>
+              {submission.questions && (
+                <Button
+                  variant={showAnswerKey ? 'secondary' : 'accent'}
+                  onClick={() => setShowAnswerKey(!showAnswerKey)}
+                  icon={showAnswerKey ? <EyeOff size={16} /> : <Eye size={16} />}
+                >
+                  {showAnswerKey ? 'Hide Answer Key' : 'View Answer Key'}
+                </Button>
+              )}
             </div>
           </Card>
 
@@ -206,7 +220,7 @@ export default function MockTestResults() {
                 <div className="flex justify-between">
                   <span className="text-text-muted">Submitted By</span>
                   <span className="text-text-primary truncate max-w-[150px]">
-                    {submission.submittedBy || 'Anonymous'}
+                    {submission.submittedBy || 'Anonymous learner'}
                   </span>
                 </div>
               </div>
@@ -222,6 +236,123 @@ export default function MockTestResults() {
             </Card>
           </div>
         </div>
+
+        {/* Answer Key Section */}
+        {showAnswerKey && submission.questions && (
+          <div className="section-container mt-6">
+            <Card>
+              <div className="flex items-center gap-3 mb-6">
+                <BookOpen size={24} className="text-primary" />
+                <h2 className="text-h3 font-heading font-bold text-text-primary">
+                  Answer Key & Explanations
+                </h2>
+              </div>
+
+              <div className="space-y-4">
+                {submission.questions.map((question, index) => {
+                  const userAnswer = submission.answers?.[index];
+                  const userSelected = userAnswer?.selectedOption;
+                  const wasSkipped = userAnswer?.skipped;
+                  const isCorrect = userSelected === question.correctAnswer;
+
+                  return (
+                    <div
+                      key={question.id || index}
+                      className={`rounded-2xl border p-4 ${
+                        isCorrect
+                          ? 'border-emerald-500/30 bg-emerald-500/5'
+                          : 'border-red-500/30 bg-red-500/5'
+                      }`}
+                    >
+                      {/* Question header */}
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                          isCorrect
+                            ? 'bg-emerald-500/20 text-emerald-400'
+                            : 'bg-red-500/20 text-red-400'
+                        }`}>
+                          {isCorrect ? <Check size={16} /> : <X size={16} />}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-caption uppercase tracking-[0.12em] text-text-muted mb-1">
+                            Question {index + 1}
+                          </p>
+                          <p className="text-body font-medium text-text-primary">
+                            {question.question}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Options */}
+                      <div className="ml-11 space-y-2">
+                        {question.options.map((option, optionIndex) => {
+                          const isCorrectOption = optionIndex === question.correctAnswer;
+                          const isUserOption = optionIndex === userSelected;
+                          const optionLetter = String.fromCharCode(65 + optionIndex);
+
+                          return (
+                            <div
+                              key={optionIndex}
+                              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-body-sm ${
+                                isCorrectOption
+                                  ? 'bg-emerald-500/15 text-emerald-300 font-medium'
+                                  : isUserOption && !isCorrectOption
+                                  ? 'bg-red-500/15 text-red-300 line-through'
+                                  : 'text-text-secondary'
+                              }`}
+                            >
+                              <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold ${
+                                isCorrectOption
+                                  ? 'bg-emerald-500/30'
+                                  : 'bg-surface2'
+                              }`}>
+                                {optionLetter}
+                              </span>
+                              <span className="flex-1">{option}</span>
+                              {isCorrectOption && (
+                                <Badge variant="success" size="sm">Correct</Badge>
+                              )}
+                              {isUserOption && !isCorrectOption && (
+                                <Badge variant="error" size="sm">Your Answer</Badge>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* User's status */}
+                      <div className="ml-11 mt-3">
+                        {wasSkipped && (
+                          <p className="text-body-sm text-amber-400">
+                            <span className="font-medium">You skipped this question.</span>
+                          </p>
+                        )}
+                        {userSelected === null && !wasSkipped && (
+                          <p className="text-body-sm text-text-muted">
+                            <span className="font-medium">You did not answer this question.</span>
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Explanation */}
+                      {question.explanation && (
+                        <div className="ml-11 mt-4 rounded-xl border border-border bg-surface2 p-4">
+                          <p className="text-caption uppercase tracking-[0.12em] text-text-muted mb-2 flex items-center gap-2">
+                            <BookOpen size={12} />
+                            Explanation
+                          </p>
+                          <p className="text-body-sm text-text-secondary">
+                            {question.explanation}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </Card>
+          </div>
+        )}
       </SectionWrapper>
     </>
   );

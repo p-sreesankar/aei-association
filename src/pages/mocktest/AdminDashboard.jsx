@@ -11,8 +11,6 @@ import {
   fetchMockTestCatalog,
   addQuestionToTest,
   deleteMockTestFromFirestore,
-  deleteSubmission,
-  subscribeToSubmissions,
   seedMockTestsFromLocal
 } from '@/services/firestore-mock-tests';
 import { useAuth } from '@context/AuthContext';
@@ -60,7 +58,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('catalog');
   
   const [tests, setTests] = useState([]);
-  const [submissions, setSubmissions] = useState([]);
+  const [submissions, setSubmissions] = useState(() => getMockTestSubmissions());
   const [dataLoading, setDataLoading] = useState(true);
   
   const [selectedTestId, setSelectedTestId] = useState('');
@@ -102,12 +100,13 @@ export default function AdminDashboard() {
       .finally(() => setDataLoading(false));
   }, [selectedTestId]);
 
-  // Real-time submissions listener
   useEffect(() => {
-    const unsubscribe = subscribeToSubmissions((nextSubmissions) => {
-      setSubmissions(nextSubmissions);
-    });
-    return unsubscribe;
+    const syncSubmissions = () => setSubmissions(getMockTestSubmissions());
+
+    syncSubmissions();
+    window.addEventListener('storage', syncSubmissions);
+
+    return () => window.removeEventListener('storage', syncSubmissions);
   }, []);
 
   const selectedTest = tests.find((test) => test.id === selectedTestId) || tests[0];
@@ -160,12 +159,9 @@ export default function AdminDashboard() {
   }
 
   async function handleDeleteSubmission(submissionId) {
-    try {
-      await deleteSubmission(submissionId);
-    } catch (error) {
-      console.error(error);
-      alert('Failed to delete submission');
-    }
+    const nextSubmissions = getMockTestSubmissions().filter((submission) => submission.id !== submissionId);
+    setMockTestSubmissions(nextSubmissions);
+    setSubmissions(nextSubmissions);
   }
 
   async function handleDeleteTest(testId) {
@@ -232,7 +228,7 @@ export default function AdminDashboard() {
 
       <PageBanner
         title="Mock Test Admin Dashboard"
-        subtitle={`Signed in as ${user?.email || 'admin'}. Review submissions, append questions, and manage the test catalog.`}
+        subtitle={`Signed in as ${user?.email || 'admin'}. Review local attempts on this browser, append questions, and manage the test catalog.`}
         breadcrumb={[
           { label: 'Home', path: '/' },
           { label: 'Mock Tests', path: '/mock-tests' },
@@ -423,7 +419,7 @@ export default function AdminDashboard() {
                 <EmptyState
                   icon="inbox"
                   title="No submissions yet"
-                  subtitle="Completed mock tests will appear here after learners submit their attempts."
+                    subtitle="Completed mock tests will appear here on this browser after attempts are submitted."
                 />
               ) : (
                 <div className="space-y-4">
@@ -440,7 +436,7 @@ export default function AdminDashboard() {
                       <div className="mt-4 grid gap-3 md:grid-cols-4 text-body-sm text-text-secondary">
                         <div>
                           <span className="block text-caption uppercase tracking-[0.22em] text-text-muted">Submitted by</span>
-                          <span className="text-text-primary">{submission.submittedBy}</span>
+                          <span className="text-text-primary">{submission.submittedBy || 'Anonymous learner'}</span>
                         </div>
                         <div>
                           <span className="block text-caption uppercase tracking-[0.22em] text-text-muted">Timestamp</span>
