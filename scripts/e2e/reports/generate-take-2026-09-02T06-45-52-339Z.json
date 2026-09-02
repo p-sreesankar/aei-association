@@ -1,0 +1,9 @@
+{
+  "startedAt": "2026-09-02T06:45:50.894Z",
+  "ok": false,
+  "baseUrl": "http://localhost:5175",
+  "createdTests": [],
+  "studentResults": [],
+  "error": "Missing admin credentials. Set E2E_ADMIN_EMAIL and E2E_ADMIN_PASSWORD.",
+  "finishedAt": "2026-09-02T06:45:52.279Z"
+}

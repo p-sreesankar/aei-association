@@ -1,0 +1,28 @@
+{
+  "startedAt": "2026-09-02T07:03:32.721Z",
+  "ok": true,
+  "baseUrl": "http://localhost:5173",
+  "createdTests": [
+    "e2e-auto-test-1-1788332615861",
+    "e2e-auto-test-2-1788332622014",
+    "e2e-auto-test-3-1788332628086"
+  ],
+  "studentResults": [
+    {
+      "testId": "e2e-auto-test-1-1788332615861",
+      "score": 2,
+      "totalQuestions": 2
+    },
+    {
+      "testId": "e2e-auto-test-2-1788332622014",
+      "score": 2,
+      "totalQuestions": 2
+    },
+    {
+      "testId": "e2e-auto-test-3-1788332628086",
+      "score": 2,
+      "totalQuestions": 2
+    }
+  ],
+  "finishedAt": "2026-09-02T07:05:33.259Z"
+}

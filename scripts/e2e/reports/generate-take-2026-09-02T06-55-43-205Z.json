@@ -1,0 +1,13 @@
+{
+  "startedAt": "2026-09-02T06:54:52.671Z",
+  "ok": false,
+  "baseUrl": "http://localhost:5173",
+  "createdTests": [
+    "e2e-auto-test-1-1788332096114",
+    "e2e-auto-test-2-1788332100262",
+    "e2e-auto-test-3-1788332103783"
+  ],
+  "studentResults": [],
+  "error": "locator.dispatchEvent: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Submit' }).first()\u001b[22m\n",
+  "finishedAt": "2026-09-02T06:55:43.091Z"
+}

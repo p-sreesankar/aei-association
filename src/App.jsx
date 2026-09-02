@@ -3,32 +3,34 @@
  * @description Main entry point that sets up authentication context, routing,
  * and lazy-loaded page components.
  */
-import { Suspense, lazy } from 'react';
+import { Suspense } from 'react';
 import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from '@components/auth/ProtectedRoute';
 import { PageLayout } from '@components/layout';
 import { LoadingSpinner, ToastProvider } from '@components/ui';
 import { AuthProvider } from '@context/AuthContext';
 import { SECTIONS } from '@data/site-config';
+import { lazyWithRetry } from '@utils/lazyWithRetry';
 
 // ── Lazy-loaded pages ──────────────────────────────────────────
 // Each page is code-split for faster initial load times
-const Home             = lazy(() => import('@pages/Home'));
-const About            = lazy(() => import('@pages/About'));
-const Notices          = lazy(() => import('@pages/Notices'));
-const Events           = lazy(() => import('@pages/Events'));
-const Resources        = lazy(() => import('@pages/Resources'));
-const Projects         = lazy(() => import('@pages/Projects'));
-const SeniorProjects   = lazy(() => import('@pages/SeniorProjects'));
-const Grievance        = lazy(() => import('@pages/Grievance'));
-const Contact          = lazy(() => import('@pages/Contact'));
-const NotFound         = lazy(() => import('@pages/NotFound'));
-const Login            = lazy(() => import('@pages/Login'));
-const MockTestIndex    = lazy(() => import('@pages/mocktest/MockTestIndex'));
-const MockTestQuiz     = lazy(() => import('@pages/mocktest/MockTestQuiz'));
-const MockTestResults  = lazy(() => import('@pages/mocktest/MockTestResults'));
-const AdminDashboard   = lazy(() => import('@pages/mocktest/AdminDashboard'));
-const ManageTests      = lazy(() => import('@pages/admin/ManageTests'));
+const Home             = lazyWithRetry(() => import('@pages/Home'));
+const About            = lazyWithRetry(() => import('@pages/About'));
+const Notices          = lazyWithRetry(() => import('@pages/Notices'));
+const Events           = lazyWithRetry(() => import('@pages/Events'));
+const Resources        = lazyWithRetry(() => import('@pages/Resources'));
+const Projects         = lazyWithRetry(() => import('@pages/Projects'));
+const SeniorProjects   = lazyWithRetry(() => import('@pages/SeniorProjects'));
+const StudentRepos     = lazyWithRetry(() => import('@pages/StudentRepos'));
+const Grievance        = lazyWithRetry(() => import('@pages/Grievance'));
+const Contact          = lazyWithRetry(() => import('@pages/Contact'));
+const NotFound         = lazyWithRetry(() => import('@pages/NotFound'));
+const Login            = lazyWithRetry(() => import('@pages/Login'));
+const MockTestIndex    = lazyWithRetry(() => import('@pages/mocktest/MockTestIndex'));
+const MockTestQuiz     = lazyWithRetry(() => import('@pages/mocktest/MockTestQuiz'));
+const MockTestResults  = lazyWithRetry(() => import('@pages/mocktest/MockTestResults'));
+const AdminDashboard   = lazyWithRetry(() => import('@pages/mocktest/AdminDashboard'));
+const ManageTests      = lazyWithRetry(() => import('@pages/admin/ManageTests'));
 
 // ── Main App Component ─────────────────────────────────────────
 /**
@@ -55,6 +57,7 @@ export default function App() {
                 {SECTIONS.resources && <Route path="/resources"  element={<Resources />} />}
                 {SECTIONS.seniorProjects && <Route path="/senior-projects" element={<SeniorProjects />} />}
                 {SECTIONS.projects  && <Route path="/projects"   element={<Projects />} />}
+                {SECTIONS.studentRepos && <Route path="/student-repos" element={<StudentRepos />} />}
                 {SECTIONS.grievance && <Route path="/grievance"  element={<Grievance />} />}
                 {SECTIONS.contact   && <Route path="/contact"    element={<Contact />} />}
 

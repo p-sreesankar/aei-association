@@ -1,0 +1,9 @@
+{
+  "startedAt": "2026-09-02T06:46:53.032Z",
+  "ok": false,
+  "baseUrl": "http://localhost:5173",
+  "createdTests": [],
+  "studentResults": [],
+  "error": "page.waitForURL: Timeout 30000ms exceeded.\n=========================== logs ===========================\nwaiting for navigation until \"load\"\n  navigated to \"http://localhost:5173/admin\"\n  navigated to \"http://localhost:5173/admin\"\n  navigated to \"http://localhost:5173/admin\"\n============================================================",
+  "finishedAt": "2026-09-02T06:47:26.644Z"
+}

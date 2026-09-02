@@ -1,0 +1,13 @@
+{
+  "startedAt": "2026-09-02T06:51:43.193Z",
+  "ok": false,
+  "baseUrl": "http://localhost:5173",
+  "createdTests": [
+    "e2e-auto-test-1-1788331905382",
+    "e2e-auto-test-2-1788331908240",
+    "e2e-auto-test-3-1788331911699"
+  ],
+  "studentResults": [],
+  "error": "Test e2e-auto-test-1-1788331905382 failed to load on student side. Body text: AEI Association\nAEI · CET\nHome→\nAbout→\nNotices→\nEvents→\nResources→\nMock Tests→\nProjects→\nGrievance→\nContact→\nMock test not found\n\nThe selected test might have been removed or the URL may be invalid.\n\nReturn to tests\nAEI Association\nAEI · CET\n\nApplied Electronics and Instrumentation\n\nCollege of Engineering Trivandrum\n\nYour one-stop hub for notices, events, resources & support\n\nQuick Links\nHome\nAbout\nNotices\nEvents\nResources\nMock Tests\nProjects\nGrievance\nContact\nConnect With Us\n\n(c) 2026 AEI Association — AEI, CET. All rights reserved.\n\nMade by AEI Association 2025-26",
+  "finishedAt": "2026-09-02T06:52:12.908Z"
+}

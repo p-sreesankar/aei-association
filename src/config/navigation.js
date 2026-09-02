@@ -23,6 +23,7 @@ const PATH_TO_SECTION = {
   '/grievance': 'grievance',
   '/contact':   'contact',
   '/mock-tests': 'mockTests',
+  '/student-repos': 'studentRepos',
 };
 
 const ALL_NAV_LINKS = [
@@ -33,6 +34,7 @@ const ALL_NAV_LINKS = [
   { label: 'Resources', path: '/resources' },
   { label: 'Mock Tests', path: '/mock-tests' },
   { label: 'Projects', path: '/senior-projects' },
+  { label: 'Code Hub', path: '/student-repos' },
   { label: 'Projects', path: '/projects' },
   { label: 'Grievance', path: '/grievance' },
   { label: 'Contact', path: '/contact' },

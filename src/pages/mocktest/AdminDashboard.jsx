@@ -205,7 +205,7 @@ export default function AdminDashboard() {
     setSeeding(true);
     setStatusMessage('⏳ Seeding mock test data to Firestore...');
     try {
-      await seedMockTestsFromLocal(MOCK_TESTS);
+      await seedMockTestsFromLocal(getMockTestCatalog(MOCK_TESTS));
       const catalog = await fetchMockTestCatalog();
       setTests(catalog);
       if (catalog.length > 0 && !selectedTestId) {

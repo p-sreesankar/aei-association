@@ -15,7 +15,7 @@ service cloud.firestore {
     // ── Mock test catalog ─────────────────────────────────────
     // WRITE access restricted to admins only to prevent data tampering
     match /mockTests/{testId} {
-      allow read: if isSignedIn();                // Only authenticated users can browse tests
+      allow read: if true;                        // Anyone can browse tests
       allow create, update, delete: if isAdmin(); // Only admins can manage tests
     }
 

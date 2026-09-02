@@ -1,9 +1,9 @@
 {
-  "baseUrl": "http://localhost:5175",
+  "baseUrl": "http://localhost:5173",
   "loginPath": "/login",
   "manageTestsPath": "/admin/manage-tests",
-  "adminEmailEnv": "E2E_ADMIN_EMAIL",
-  "adminPasswordEnv": "E2E_ADMIN_PASSWORD",
+  "adminEmailEnv": "VITE_MOCK_TEST_ADMIN_EMAIL",
+  "adminPasswordEnv": "VITE_MOCK_TEST_ADMIN_PASSWORD",
   "newTest": {
     "idPrefix": "e2e-crud",
     "titlePrefix": "E2E CRUD",

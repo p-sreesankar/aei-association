@@ -40,6 +40,7 @@ function buildDraft(test = null) {
     difficulty: test?.difficulty || 'medium',
     startDate: test?.startDate || '',
     endDate: test?.endDate || '',
+    imageUrl: test?.imageUrl || '',
     durationMinutes: test?.durationMinutes || 30,
     totalMarks: test?.totalMarks || 20,
     questions: Array.isArray(test?.questions) && test.questions.length > 0
@@ -85,7 +86,7 @@ export default function ManageTests() {
       const isNewAction = searchParams.get('action') === 'new';
 
       try {
-        const catalog = await fetchMockTestCatalog();
+        let catalog = await fetchMockTestCatalog();
 
         if (!catalog.length) {
           catalog = getMockTestCatalog(MOCK_TESTS);
@@ -279,6 +280,7 @@ export default function ManageTests() {
       difficulty: draft.difficulty.trim(),
       startDate: draft.startDate.trim(),
       endDate: draft.endDate.trim() || null,
+      imageUrl: draft.imageUrl?.trim() || null,
       durationMinutes: Number.parseInt(draft.durationMinutes, 10) || 30,
       totalMarks: Number.parseInt(draft.totalMarks, 10) || validQuestions.length,
       questions: validQuestions.map((q, index) => ({
@@ -345,7 +347,7 @@ export default function ManageTests() {
   // Seed defaults
   async function handleSeed() {
     setStatus('Seeding defaults...');
-    await seedMockTestsFromLocal(MOCK_TESTS);
+    await seedMockTestsFromLocal(getMockTestCatalog(MOCK_TESTS));
     await refreshCatalog();
   }
 
@@ -504,6 +506,7 @@ export default function ManageTests() {
                     <label className="text-body-sm text-text-secondary font-medium block">Subject</label>
                     <div className="grid gap-3 md:grid-cols-2">
                       <select 
+                        aria-label="Subject"
                         value={customSubjectActive ? '__NEW__' : (draft.subject || '')} 
                         onChange={(e) => handleSubjectSelect(e.target.value)}
                         className="w-full rounded-xl border border-border bg-bg/80 px-4 py-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
@@ -560,6 +563,11 @@ export default function ManageTests() {
                   <label className="block space-y-2">
                     <span className="text-body-sm text-text-secondary font-medium">End Date</span>
                     <input type="date" value={draft.endDate} onChange={(event) => setDraft((current) => ({ ...current, endDate: event.target.value }))} className="w-full rounded-xl border border-border bg-bg/80 px-4 py-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-border" />
+                  </label>
+
+                  <label className="block space-y-2 md:col-span-2">
+                    <span className="text-body-sm text-text-secondary font-medium">Test Image URL (Optional)</span>
+                    <input type="url" placeholder="https://example.com/image.png" value={draft.imageUrl} onChange={(event) => setDraft((current) => ({ ...current, imageUrl: event.target.value }))} className="w-full rounded-xl border border-border bg-bg/80 px-4 py-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 border-border" />
                   </label>
                 </div>
 

@@ -114,6 +114,7 @@ const SECTIONS = {
   mockTests: true,   // Mock tests portal and quiz routes
   seniorProjects: true, // Senior projects showcase page
   projects:  false,  // Projects showcase page (temporarily disabled)
+  studentRepos: true, // Student GitHub repositories showcase
   grievance: true,   // Anonymous grievance form page
   admin:     true,   // Admin routes (protected)
   contact:   true,   // Contact page

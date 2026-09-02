@@ -21,13 +21,25 @@ function formatDuration(minutes) {
 }
 
 function MockTestCard({ test, onOpen }) {
+  const [imageError, setImageError] = useState(false);
   const statusLabel = isUpcoming(test.startDate) ? 'Upcoming' : 'Open';
 
   return (
-    <Card clickable onClick={() => onOpen(test.id)} className="relative h-full flex flex-col border-border/80 bg-gradient-to-b from-surface to-surface2">
-      <div className="flex items-start justify-between gap-3 mb-4">
-        <div className="min-w-0">
-          <h3 className="text-h4 font-heading font-bold text-text-primary line-clamp-2">
+    <Card clickable onClick={() => onOpen(test.id)} className="relative h-full flex flex-col border-border/80 bg-gradient-to-b from-surface to-surface2 overflow-hidden p-0">
+      {test.imageUrl && !imageError && (
+        <div className="w-full aspect-video border-b border-border/50">
+          <img 
+            src={test.imageUrl} 
+            alt={test.title} 
+            onError={() => setImageError(true)}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
+      <div className="p-6 flex flex-col flex-1">
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <div className="min-w-0">
+            <h3 className="text-h4 font-heading font-bold text-text-primary line-clamp-2">
             {test.title}
           </h3>
           <p className="mt-1 text-body-sm text-text-secondary line-clamp-2">
@@ -60,12 +72,13 @@ function MockTestCard({ test, onOpen }) {
         </div>
       </div>
 
-      <div className="mt-auto flex items-center justify-between gap-3">
-        <span className="inline-flex items-center gap-1 text-caption uppercase tracking-[0.22em] text-text-muted">
-          <Layers3 size={12} />
-          {test.subject}
-        </span>
-        <span className="btn-primary pointer-events-none">Start</span>
+        <div className="mt-auto pt-5 flex items-center justify-between gap-3">
+          <span className="inline-flex items-center gap-1 text-caption uppercase tracking-[0.22em] text-text-muted">
+            <Layers3 size={12} />
+            {test.subject}
+          </span>
+          <span className="btn-primary pointer-events-none">Start</span>
+        </div>
       </div>
     </Card>
   );
@@ -87,7 +100,7 @@ export default function MockTestIndex() {
       try {
         let catalog = await fetchMockTestCatalog();
         if (catalog.length === 0) {
-          await seedMockTestsFromLocal(MOCK_TESTS);
+          await seedMockTestsFromLocal(getMockTestCatalog(MOCK_TESTS));
           catalog = await fetchMockTestCatalog();
         }
         if (!cancelled) setTests(catalog);

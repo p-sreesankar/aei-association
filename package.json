@@ -11,7 +11,8 @@
     "validate:config": "node scripts/validate-config.mjs",
     "validate:tests": "node scripts/validate-mock-tests.mjs",
     "validate:resources": "node scripts/validate-resources.mjs",
-    "e2e:admin-ui-crud": "node scripts/e2e/admin-ui-crud-harness.mjs",
+    "e2e:admin-ui-crud": "node --env-file=.env.local scripts/e2e/admin-ui-crud-harness.mjs",
+    "e2e:generate-take": "node --env-file=.env.local scripts/e2e/generate-take-harness.mjs",
     "firebase:sync": "node --env-file=.env.local scripts/firebase/sync-content.mjs",
     "firebase:sync:text": "node --env-file=.env.local scripts/firebase/sync-content.mjs --text-only",
     "firebase:set-admin-claim": "node scripts/firebase/set-admin-claim.mjs"
