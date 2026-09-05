@@ -94,7 +94,7 @@ export default function MockTestResults() {
     );
   }
 
-  const percentage = calculatePercentage(submission.score, submission.totalQuestions);
+  const percentage = calculatePercentage(submission.score, submission.totalMarks || submission.totalQuestions);
   const gradeInfo = getGradeInfo(percentage);
 
   return (
@@ -136,7 +136,7 @@ export default function MockTestResults() {
                 <p className="text-5xl font-heading font-bold text-text-primary">
                   {submission.score}
                   <span className="text-3xl text-text-muted">
-                    /{submission.totalQuestions}
+                    /{submission.totalMarks || submission.totalQuestions}
                   </span>
                 </p>
                 <p className="mt-2 text-body-sm text-text-muted">
@@ -274,9 +274,12 @@ export default function MockTestResults() {
                           {isCorrect ? <Check size={16} /> : <X size={16} />}
                         </div>
                         <div className="flex-1">
-                          <p className="text-caption uppercase tracking-[0.12em] text-text-muted mb-1">
-                            Question {index + 1}
-                          </p>
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="text-caption uppercase tracking-[0.12em] text-text-muted">
+                              Question {index + 1}
+                            </p>
+                            <Badge variant="muted" size="sm">{question.marks || 1} {Number(question.marks) === 1 || !(question.marks) ? 'mark' : 'marks'}</Badge>
+                          </div>
                           <p className="text-body font-medium text-text-primary">
                             {question.question}
                           </p>

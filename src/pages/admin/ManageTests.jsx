@@ -27,6 +27,7 @@ function buildQuestion(index = 0) {
     options: ['', '', '', ''],
     correctAnswer: -1,
     explanation: '',
+    marks: 1,
   };
 }
 
@@ -51,6 +52,7 @@ function buildDraft(test = null) {
           options: Array.isArray(q.options) ? [...q.options] : ['', '', '', ''],
           correctAnswer: Number.isInteger(q.correctAnswer) ? q.correctAnswer : -1,
           explanation: q.explanation || '',
+          marks: Number(q.marks) || 1,
         }))
       : [buildQuestion(0)],
   };
@@ -282,7 +284,7 @@ export default function ManageTests() {
       endDate: draft.endDate.trim() || null,
       imageUrl: draft.imageUrl?.trim() || null,
       durationMinutes: Number.parseInt(draft.durationMinutes, 10) || 30,
-      totalMarks: Number.parseInt(draft.totalMarks, 10) || validQuestions.length,
+      totalMarks: validQuestions.reduce((sum, q) => sum + (Number.parseInt(q.marks, 10) || 1), 0),
       questions: validQuestions.map((q, index) => ({
         id: String(index + 1),
         type: q.type,
@@ -290,6 +292,7 @@ export default function ManageTests() {
         options: q.options.filter((opt) => opt.trim()),
         correctAnswer: q.correctAnswer,
         explanation: q.explanation.trim(),
+        marks: Number.parseInt(q.marks, 10) || 1,
       })),
       updatedAt: new Date().toISOString(),
     };
@@ -663,16 +666,30 @@ export default function ManageTests() {
                           </div>
                         </div>
 
-                        {/* Optional Explanation */}
-                        <div className="space-y-1">
-                          <label className="block text-body-sm font-medium text-text-secondary">Explanation <span className="text-text-muted text-caption">(optional)</span></label>
-                          <input
-                            type="text"
-                            value={question.explanation}
-                            onChange={(e) => updateQuestionField(qIndex, 'explanation', e.target.value)}
-                            placeholder="Why is this the correct answer?"
-                            className="w-full rounded-xl border border-border bg-bg/85 px-4 py-2.5 text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20"
-                          />
+                        <div className="grid gap-4 md:grid-cols-2">
+                          {/* Marks Input */}
+                          <div className="space-y-1">
+                            <label className="block text-body-sm font-medium text-text-secondary">Marks</label>
+                            <input
+                              type="number"
+                              min="1"
+                              value={question.marks}
+                              onChange={(e) => updateQuestionField(qIndex, 'marks', e.target.value)}
+                              className="w-full rounded-xl border border-border bg-bg/85 px-4 py-2.5 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                            />
+                          </div>
+
+                          {/* Optional Explanation */}
+                          <div className="space-y-1">
+                            <label className="block text-body-sm font-medium text-text-secondary">Explanation <span className="text-text-muted text-caption">(optional)</span></label>
+                            <input
+                              type="text"
+                              value={question.explanation}
+                              onChange={(e) => updateQuestionField(qIndex, 'explanation', e.target.value)}
+                              placeholder="Why is this the correct answer?"
+                              className="w-full rounded-xl border border-border bg-bg/85 px-4 py-2.5 text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20"
+                            />
+                          </div>
                         </div>
                       </div>
                     ))}

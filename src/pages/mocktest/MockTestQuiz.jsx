@@ -107,7 +107,7 @@ export default function MockTestQuiz() {
 
     const score = responses.reduce((total, response, index) => {
       if (response.selectedOption === test.questions[index].correctAnswer) {
-        return total + 1;
+        return total + (Number(test.questions[index].marks) || 1);
       }
 
       return total;
@@ -132,6 +132,7 @@ export default function MockTestQuiz() {
         options: q.options,
         correctAnswer: q.correctAnswer,
         explanation: q.explanation,
+        marks: Number(q.marks) || 1,
       })),
     };
 
@@ -217,8 +218,9 @@ export default function MockTestQuiz() {
   }
 
   if (submitted && submissionSummary) {
-    const percentage = submissionSummary.totalQuestions > 0
-      ? Math.round((submissionSummary.score / submissionSummary.totalQuestions) * 100)
+    const maxScore = submissionSummary.totalMarks || submissionSummary.totalQuestions;
+    const percentage = maxScore > 0
+      ? Math.round((submissionSummary.score / maxScore) * 100)
       : 0;
 
     return (
@@ -242,8 +244,8 @@ export default function MockTestQuiz() {
               <div className="grid gap-4 md:grid-cols-3">
                 <div className="rounded-2xl border border-border bg-surface2 p-4">
                   <p className="text-caption uppercase tracking-[0.24em] text-text-muted">Score</p>
-                  <p className="mt-2 text-4xl font-heading font-bold text-text-primary">{submissionSummary.score}/{submissionSummary.totalQuestions}</p>
-                  <p className="mt-1 text-body-sm text-text-secondary">{percentage}% correct</p>
+                  <p className="mt-2 text-4xl font-heading font-bold text-text-primary">{submissionSummary.score}/{submissionSummary.totalMarks || submissionSummary.totalQuestions}</p>
+                  <p className="mt-1 text-body-sm text-text-secondary">{percentage}%</p>
                 </div>
                 <div className="rounded-2xl border border-border bg-surface2 p-4">
                   <p className="text-caption uppercase tracking-[0.24em] text-text-muted">Submitted by</p>
