@@ -129,6 +129,7 @@ export default function MockTestQuiz() {
       questions: test.questions.map((q) => ({
         id: q.id,
         question: q.question,
+        imageUrl: q.imageUrl || null,
         options: q.options,
         correctAnswer: q.correctAnswer,
         explanation: q.explanation,
@@ -318,9 +319,21 @@ export default function MockTestQuiz() {
         <div className="relative z-[1] section-container grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
           <Card className="h-full">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
-              <div>
+              <div className="w-full sm:w-auto flex-1">
                 <p className="text-caption uppercase tracking-[0.24em] text-text-muted">Question {currentIndex + 1} of {test.questions.length}</p>
                 <h2 className="mt-2 text-h3 font-heading font-bold text-text-primary">{currentQuestion.question}</h2>
+                {currentQuestion.imageUrl && (
+                  <div className="mt-4 max-w-full overflow-hidden rounded-xl border border-border/50">
+                    <img 
+                      src={currentQuestion.imageUrl} 
+                      alt={`Question ${currentIndex + 1} reference`}
+                      className="max-h-64 w-auto object-contain"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center gap-3">

@@ -24,6 +24,7 @@ const TAB_OPTIONS = [
 function buildQuestionDraft() {
   return {
     question: '',
+    imageUrl: '',
     options: '',
     correctAnswer: '0',
     explanation: '',
@@ -131,6 +132,7 @@ export default function AdminDashboard() {
       id: `q-${Date.now()}`,
       type: 'mcq',
       question: draft.question.trim(),
+      imageUrl: draft.imageUrl?.trim() || null,
       options,
       correctAnswer: correctAnswerIndex,
       explanation: draft.explanation.trim(),
@@ -504,6 +506,17 @@ export default function AdminDashboard() {
                       rows={4}
                       className="w-full rounded-xl border border-border bg-bg/80 px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                       placeholder="Write the new exam question here"
+                    />
+                  </label>
+
+                  <label className="block space-y-2">
+                    <span className="text-body-sm text-text-secondary">Image URL <span className="text-text-muted text-caption">(optional)</span></span>
+                    <input
+                      type="url"
+                      value={draft.imageUrl}
+                      onChange={(event) => setDraft((previous) => ({ ...previous, imageUrl: event.target.value }))}
+                      className="w-full rounded-xl border border-border bg-bg/80 px-4 py-3 text-text-primary placeholder:text-text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      placeholder="https://example.com/image.png"
                     />
                   </label>
 

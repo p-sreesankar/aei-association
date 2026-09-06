@@ -24,6 +24,7 @@ function buildQuestion(index = 0) {
     id: String(index + 1),
     type: 'mcq',
     question: '',
+    imageUrl: '',
     options: ['', '', '', ''],
     correctAnswer: -1,
     explanation: '',
@@ -49,6 +50,7 @@ function buildDraft(test = null) {
           id: String(idx + 1),
           type: q.type || 'mcq',
           question: q.question || '',
+          imageUrl: q.imageUrl || '',
           options: Array.isArray(q.options) ? [...q.options] : ['', '', '', ''],
           correctAnswer: Number.isInteger(q.correctAnswer) ? q.correctAnswer : -1,
           explanation: q.explanation || '',
@@ -289,6 +291,7 @@ export default function ManageTests() {
         id: String(index + 1),
         type: q.type,
         question: q.question.trim(),
+        imageUrl: q.imageUrl?.trim() || null,
         options: q.options.filter((opt) => opt.trim()),
         correctAnswer: q.correctAnswer,
         explanation: q.explanation.trim(),
@@ -621,6 +624,18 @@ export default function ManageTests() {
                             placeholder="Enter the question contents..."
                             className="w-full rounded-xl border border-border bg-bg/85 px-4 py-2.5 text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20"
                             required
+                          />
+                        </div>
+
+                        {/* Optional Image URL Input */}
+                        <div className="space-y-1">
+                          <label className="block text-body-sm font-medium text-text-secondary">Image URL <span className="text-text-muted text-caption">(optional)</span></label>
+                          <input
+                            type="url"
+                            value={question.imageUrl}
+                            onChange={(e) => updateQuestionField(qIndex, 'imageUrl', e.target.value)}
+                            placeholder="https://example.com/image.png"
+                            className="w-full rounded-xl border border-border bg-bg/85 px-4 py-2.5 text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20"
                           />
                         </div>
 
