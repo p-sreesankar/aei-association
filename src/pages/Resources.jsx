@@ -19,7 +19,7 @@ import { SectionWrapper } from '@components/layout';
 import { Card, EmptyState, PageBanner, SectionHeader } from '@components/ui';
 import { formatDate } from '@utils/date';
 
-const TARGET_SEMESTERS = ['S2', 'S3', 'S4', 'S6'];
+const TARGET_SEMESTERS = ['S1', 'S2', 'S3', 'S4', 'S6'];
 
 const FILE_TYPE_META = {
   notes: { icon: FileText, color: 'bg-primary-soft text-primary' },
