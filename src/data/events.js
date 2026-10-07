@@ -63,6 +63,20 @@
 /** @type {Array<{id: string, title: string, date: string, endDate: string|null, venue: string, description: string, image: string|null, category: string, time: string|null, registrationUrl: string|null, instagramUrl: string|null, hideDate?: boolean}>} */
 const EVENTS = [
   {
+    id:              "learning-resources-website-launch",
+    title:           "Test Series & GitHub Projects Now Available",
+    date:            "2026-10-08",
+    endDate:         null,
+    venue:           "AEI Association Website",
+    description:     "The AEI Association brings you more ways to learn, practice, and explore.\n\nTest yourself with series covering Microcontrollers, Analog Circuits, Instrumentation, Digital Electronics, Control, and Signals. Explore technical projects and learn through real implementations on GitHub.\n\nPractice. Explore. Learn. Grow.",
+    image:           "/images/events/8-9-26.jpeg",
+    category:        "general",
+    time:            null,
+    registrationUrl: "https://aei.cet.ac.in/",
+    instagramUrl:    "https://www.instagram.com/p/DdBpbQdTjVe/?stkn=MW90c2NxcjJoZGY0Nw==",
+  },
+
+  {
     id:              "candela-26",
     title:           "Candela '26",
     date:            "2026-04-20",
