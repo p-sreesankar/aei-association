@@ -999,7 +999,7 @@ const RESOURCES = [
     category: "2024 Scheme S3",
     fileType: "video",
     driveLink: "https://drive.google.com/file/d/1-UVxb7RUhXcp_OIZC5hVphr-uvCY75gS/view?usp=drive_link",
-    addedDate: "2026-10-08",
+    addedDate: "2026-10-01",
   },
   {
     id: "site-2024-s3-transducers-measurements-lab-video-dead-weight-tester",
@@ -1009,7 +1009,7 @@ const RESOURCES = [
     category: "2024 Scheme S3",
     fileType: "video",
     driveLink: "https://drive.google.com/file/d/1ItstGET2bSeebyMr_sEQQ2NOY-8wjqZ6/view?usp=drive_link",
-    addedDate: "2026-10-08",
+    addedDate: "2026-10-01",
   },
   {
     id: "site-2024-s3-transducers-measurements-lab-video-hall-effect-transducer",
@@ -1019,7 +1019,7 @@ const RESOURCES = [
     category: "2024 Scheme S3",
     fileType: "video",
     driveLink: "https://drive.google.com/file/d/1Begf0dlCZIzk_quYgx8q6agqDNzwjs7O/view?usp=drive_link",
-    addedDate: "2026-10-08",
+    addedDate: "2026-10-01",
   },
   {
     id: "site-2024-s3-transducers-measurements-lab-video-level-measurement",
@@ -1029,7 +1029,7 @@ const RESOURCES = [
     category: "2024 Scheme S3",
     fileType: "video",
     driveLink: "https://drive.google.com/file/d/129kTaa8yE77te9xqFRGWLWY6usQKi9oE/view?usp=drive_link",
-    addedDate: "2026-10-08",
+    addedDate: "2026-10-01",
   },
   {
     id: "site-2024-s3-transducers-measurements-lab-video-load-cell",
@@ -1039,7 +1039,7 @@ const RESOURCES = [
     category: "2024 Scheme S3",
     fileType: "video",
     driveLink: "https://drive.google.com/file/d/1SeHLPGuxrykZVAIauQADAk1vuGwshDBT/view?usp=drive_link",
-    addedDate: "2026-10-08",
+    addedDate: "2026-10-01",
   },
   {
     id: "site-2024-s3-logic-circuit-design-notes-module-1",
