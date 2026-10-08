@@ -143,34 +143,40 @@ function EventCard({ event, isPast = false, onImageClick }) {
   const showCountdown = !hideDate && !isPast && days >= 0 && days <= 7;
   const gradient = gradientFor(event.id);
   const [imageError, setImageError] = useState(false);
-  const showImage = Boolean(event.image) && !imageError;
+  const images = event.images?.length ? event.images : (event.image ? [event.image] : []);
+  const showImage = images.length > 0 && !imageError;
 
   return (
     <Card className="overflow-hidden flex flex-col h-full">
       {/* ── Image / Placeholder ──────────────────────────────────────── */}
       {showImage ? (
-        <button
-          type="button"
-          onClick={() => onImageClick?.(event)}
-          className="relative h-36 sm:h-44 bg-surface2 overflow-hidden w-full cursor-zoom-in"
-          aria-label={`View full image for ${event.title}`}
-        >
-          <img
-            src={event.image}
-            alt=""
-            aria-hidden="true"
-            loading="lazy"
-            className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-45"
-          />
-          <div className="absolute inset-0 bg-black/10" />
-          <img
-            src={event.image}
-            alt={event.title}
-            loading="lazy"
-            onError={() => setImageError(true)}
-            className="relative z-10 w-full h-full object-contain"
-          />
-        </button>
+        <div className={`relative h-36 sm:h-44 bg-surface2 overflow-hidden w-full grid ${images.length > 1 ? 'grid-cols-3 gap-0.5' : ''}`}>
+          {images.map((image, index) => (
+            <button
+              key={image}
+              type="button"
+              onClick={() => onImageClick?.({ ...event, image })}
+              className="relative min-w-0 overflow-hidden cursor-zoom-in"
+              aria-label={`View image ${index + 1} for ${event.title}`}
+            >
+              <img
+                src={image}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-45"
+              />
+              <div className="absolute inset-0 bg-black/10" />
+              <img
+                src={image}
+                alt={`${event.title} image ${index + 1}`}
+                loading="lazy"
+                onError={() => setImageError(true)}
+                className="relative z-10 w-full h-full object-contain"
+              />
+            </button>
+          ))}
+        </div>
       ) : (
         <div
           className={`

@@ -60,7 +60,7 @@
 //
 // ============================================================================
 
-/** @type {Array<{id: string, title: string, date: string|null, endDate: string|null, venue: string, description: string, image: string|null, category: string, time: string|null, registrationUrl: string|null, instagramUrl: string|null, hideDate?: boolean}>} */
+/** @type {Array<{id: string, title: string, date: string|null, endDate: string|null, venue: string, description: string, image: string|null, images?: string[], category: string, time: string|null, registrationUrl: string|null, instagramUrl: string|null, hideDate?: boolean}>} */
 const EVENTS = [
   {
     id:              "consulting-analytics-industry-session",
@@ -78,11 +78,11 @@ const EVENTS = [
 
   {
     id:              "epoch-placement-talk-session-2-analog-devices",
-    title:           "Placement Talk — Session 2: Stepping into the Core Sector",
+    title:           "Placement Talk — Stepping into the Core Sector",
     date:            "2026-04-12",
     endDate:         null,
     venue:           "Online",
-    description:     "EPOCH, in collaboration with the Internship Cell CET, presents Session 2 of its placement series focused on Digital Design and Design Verification in the core electronics domain. Diya Rose Thomas, Digital Design Intern at Analog Devices, and Keshav Balakrishnan, Design Verification Intern at Analog Devices, will share their insights and experiences. The session is scheduled for 14 April 2026 at 7:00 PM.",
+    description:     "EPOCH, in collaboration with the Internship Cell CET, presents a placement session focused on Digital Design and Design Verification in the core electronics domain. Diya Rose Thomas, Digital Design Intern at Analog Devices, and Keshav Balakrishnan, Design Verification Intern at Analog Devices, will share their insights and experiences. The session is scheduled for 14 April 2026 at 7:00 PM.",
     image:           null,
     category:        "seminar",
     time:            "7:00 PM",
@@ -107,7 +107,7 @@ const EVENTS = [
 
   {
     id:              "epoch-placement-talk-session-3-athul",
-    title:           "Placement Talk — Session 3",
+    title:           "Placement Talk",
     date:            "2026-05-23",
     endDate:         null,
     venue:           "Online",
@@ -121,7 +121,7 @@ const EVENTS = [
 
   {
     id:              "epoch-placement-talks-session-7-vykasi-sidhana",
-    title:           "Placement Talks — Session 7",
+    title:           "Placement Talks",
     date:            "2026-07-03",
     endDate:         null,
     venue:           "Online",
@@ -135,7 +135,7 @@ const EVENTS = [
 
   {
     id:              "epoch-placement-talks-session-8-devika-v",
-    title:           "Placement Talks — Session 8",
+    title:           "Placement Talks",
     date:            "2026-07-10",
     endDate:         null,
     venue:           "Online",
@@ -148,41 +148,18 @@ const EVENTS = [
   },
 
   {
-    id:              "electronics-league-year-captains",
-    title:           "Year Captains — Electronics League 2026",
+    id:              "electronics-league-2026",
+    title:           "Electronics League 2026",
     date:            "2026-08-01",
     endDate:         null,
     venue:           "To be announced",
-    description:     "Meet the year captains who will represent their teams and help lead Electronics League 2026.",
-    image:           "/images/events/year%20captians%20electronics%20league.png",
-    category:        "competition",
-    time:            null,
-    registrationUrl: null,
-    instagramUrl:    "https://www.instagram.com/p/DbgGjWSvnHh/?stkn=MWlhZ2lvNWp6MDh1eQ%3D%3D",
-  },
-
-  {
-    id:              "electronics-league-organizing-team",
-    title:           "Meet the Organizing Team — Electronics League 2026",
-    date:            "2026-08-01",
-    endDate:         null,
-    venue:           "To be announced",
-    description:     "Meet the coordinators and year captains leading Electronics League 2026. Get ready for exciting matches, healthy competition, and memorable experiences.",
-    image:           "/images/events/electronics%20league%20coordinators.png",
-    category:        "competition",
-    time:            null,
-    registrationUrl: null,
-    instagramUrl:    "https://www.instagram.com/p/DbgHQpJPRQz/?stkn=bGYwcmdnZHUweHI5",
-  },
-
-  {
-    id:              "electronics-league-announcement",
-    title:           "Electronics League — Coming Soon",
-    date:            "2026-08-01",
-    endDate:         null,
-    venue:           "To be announced",
-    description:     "The EC and AE Associations present Electronics League, an upcoming semester event that will test speed, strategy, teamwork, and competitive spirit. Students are encouraged to form teams, begin preparing, and stay tuned for registration details.",
+    description:     "The EC and AE Associations present Electronics League 2026. Meet the organizing team and year captains, and get ready for exciting matches, healthy competition, teamwork, and memorable experiences.",
     image:           "/images/events/electronics%20league%201.png",
+    images:          [
+      "/images/events/electronics%20league%201.png",
+      "/images/events/electronics%20league%20coordinators.png",
+      "/images/events/year%20captians%20electronics%20league.png",
+    ],
     category:        "general",
     time:            null,
     registrationUrl: null,
@@ -275,20 +252,6 @@ const EVENTS = [
   },
 
   {
-    id:              "learning-resources-website-launch",
-    title:           "Test Series & GitHub Projects Now Available",
-    date:            "2026-10-08",
-    endDate:         null,
-    venue:           "AEI Association Website",
-    description:     "The AEI Association brings you more ways to learn, practice, and explore.\n\nTest yourself with series covering Microcontrollers, Analog Circuits, Instrumentation, Digital Electronics, Control, and Signals. Explore technical projects and learn through real implementations on GitHub.\n\nPractice. Explore. Learn. Grow.",
-    image:           "/images/events/8-9-26.jpeg",
-    category:        "general",
-    time:            null,
-    registrationUrl: "https://aei.cet.ac.in/",
-    instagramUrl:    "https://www.instagram.com/p/DdBpbQdTjVe/?stkn=MW90c2NxcjJoZGY0Nw==",
-  },
-
-  {
     id:              "candela-26",
     title:           "Candela '26",
     date:            "2026-04-20",
@@ -300,21 +263,6 @@ const EVENTS = [
     time:            null,
     registrationUrl: null,
     instagramUrl:    null,
-    hideDate:        true,
-  },
-
-  {
-    id:              "candela-2026",
-    title:           "Candela 2026",
-    date:            null,
-    endDate:         null,
-    venue:           "AEI Department",
-    description:     "Follow the official Candela 2026 Instagram page for announcements, updates, and event details.",
-    image:           null,
-    category:        "fest",
-    time:            null,
-    registrationUrl: null,
-    instagramUrl:    "https://www.instagram.com/candelacet/",
     hideDate:        true,
   },
 

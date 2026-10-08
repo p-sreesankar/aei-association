@@ -55,10 +55,19 @@
 /** @type {Array<{id: string, title: string, category: string, date: string|null, description: string, attachmentUrl: string|null, pinned: boolean}>} */
 const NOTICES = [
 	{
+		id: "test-series-github-projects-available",
+		title: "Test Series & GitHub Projects Now Available",
+		category: "general",
+		date: "2026-10-08",
+		description: "The AEI Association brings you more ways to learn, practice, and explore. Test yourself with series covering Microcontrollers, Analog Circuits, Instrumentation, Digital Electronics, Control, and Signals. Explore technical projects and learn through real implementations on GitHub. Visit https://aei.cet.ac.in/ to access these learning resources.",
+		attachmentUrl: "https://www.instagram.com/p/DdBpbQdTjVe/?stkn=MW90c2NxcjJoZGY0Nw==",
+		pinned: false,
+	},
+	{
 		id: "rescheduled-second-series-tests-2026",
 		title: "Rescheduled Series Examinations — S1, S3, S5 and S7",
 		category: "academic",
-		date: "2026-08-06",
+		date: "2026-10-06",
 		description: "The Second Series Examination schedule for S3, S5, and S7 has been revised to 22, 23, 24, and 26 October 2026. The Minor Examination is scheduled for the forenoon session on 22 October. The S1 First Series Examination will commence on 26 October 2026. Students are advised to take note of the revised schedule.",
 		attachmentUrl: null,
 		pinned: false,
@@ -178,7 +187,7 @@ const NOTICES = [
 		date: "2026-04-12",
 		description: "B.Tech Applied Electronics Detailed Examination Time Table (S2, S4, S6, S8).",
 		attachmentUrl: "https://www.instagram.com/p/DWwQmkqk-Vn/?igsh=MTl3dnJhajNxdGc2MA==",
-		pinned: true,
+		pinned: false,
 	},
 ];
 
